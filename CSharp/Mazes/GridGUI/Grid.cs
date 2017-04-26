@@ -18,6 +18,14 @@ namespace GridGUI
             {
                 rooms[x] = new Room[numberOfColumns];
             }
+
+            for(int rowIndex = 0; rowIndex < numberOfRows; rowIndex++)
+            {
+                for(int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++)
+                {
+                    rooms[rowIndex][columnIndex] = new Room();
+                }
+            }
         }
     }
 }
