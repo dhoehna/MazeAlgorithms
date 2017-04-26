@@ -23,7 +23,7 @@ namespace GridGUI
             {
                 for(int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++)
                 {
-                    rooms[rowIndex][columnIndex] = new Room();
+                    rooms[rowIndex][columnIndex] = new Room(rowIndex, columnIndex);
                 }
             }
         }
