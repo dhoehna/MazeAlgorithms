@@ -6,26 +6,78 @@ using System.Threading.Tasks;
 
 namespace GridGUI
 {
-    public class Grid
+    public sealed class Grid
     {
+        public enum Direction
+        {
+            NORTH,
+            SOUTH,
+            EAST,
+            WEST
+        }
+
         private Room[][] rooms;
+        private int rows;
+        private int columns;
 
         public Grid(int numberOfRows, int numberOfColumns)
         {
             rooms = new Room[numberOfRows][];
-
-            for(int x = 0; x < numberOfRows; x++)
+            rows = numberOfRows;
+            columns = numberOfColumns;
+            for (int x = 0; x < numberOfRows; x++)
             {
                 rooms[x] = new Room[numberOfColumns];
             }
 
-            for(int rowIndex = 0; rowIndex < numberOfRows; rowIndex++)
+            for (int rowIndex = 0; rowIndex < numberOfRows; rowIndex++)
             {
-                for(int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++)
+                for (int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++)
                 {
                     rooms[rowIndex][columnIndex] = new Room(rowIndex, columnIndex);
                 }
             }
         }
+
+        public void Connect(Room room, Direction directionToConect)
+        {
+            Room roomToConnectWith = null;
+
+            GridPosition positionOfNeighborToConnectWith = RoomHelper.GetNeighborLocation(room, directionToConect);
+
+            if(IsValidPosition(positionOfNeighborToConnectWith))
+            {
+                //roomToConnectWith = 
+            }
+
+
+        }
+
+        private bool IsValidPosition(GridPosition gridPosition)
+        {
+            if(gridPosition.row < 0 || gridPosition.row > rows)
+            {
+                return false;
+            }
+
+            if(gridPosition.column < 0 || gridPosition.column > columns)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+        public Room this[int row, int column]
+        {
+            get
+            {
+                return rooms[row][column];
+            }
+        }
+
+
     }
 }
