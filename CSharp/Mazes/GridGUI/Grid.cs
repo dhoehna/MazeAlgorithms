@@ -16,6 +16,7 @@ namespace GridGUI
             WEST
         }
 
+        
         private Room[][] rooms;
         private int rows;
         private int columns;
@@ -47,10 +48,28 @@ namespace GridGUI
 
             if(IsValidPosition(positionOfNeighborToConnectWith))
             {
-                //roomToConnectWith = 
+                roomToConnectWith = this[positionOfNeighborToConnectWith.row, positionOfNeighborToConnectWith.column];
             }
 
+            if(roomToConnectWith != null)
+            {
+                room.Connect(roomToConnectWith, directionToConect);
+            }
+        }
 
+        public Room this[int row, int column]
+        {
+            get
+            {
+                if (IsValidPosition(new GridPosition(row, column)))
+                {
+                    return rooms[row][column];
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         private bool IsValidPosition(GridPosition gridPosition)
@@ -70,13 +89,7 @@ namespace GridGUI
 
 
 
-        public Room this[int row, int column]
-        {
-            get
-            {
-                return rooms[row][column];
-            }
-        }
+        
 
 
     }

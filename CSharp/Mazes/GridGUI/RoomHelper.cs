@@ -33,5 +33,27 @@ namespace GridGUI
                 throw new ArgumentException($"{direction} is not a valid direction.");
             }
         }
+
+        public static void ConnectRooms(Room roomOne, Room roomTwo, Direction directionFromRoomOneToRoomTwo)
+        {
+            roomOne.Connect(roomTwo, directionFromRoomOneToRoomTwo);
+
+            if(directionFromRoomOneToRoomTwo == Direction.NORTH)
+            {
+                roomTwo.Connect(roomOne, Direction.SOUTH);
+            }
+            else if(directionFromRoomOneToRoomTwo == Direction.SOUTH)
+            {
+                roomTwo.Connect(roomOne, Direction.NORTH);
+            }
+            else if (directionFromRoomOneToRoomTwo == Direction.EAST)
+            {
+                roomTwo.Connect(roomOne, Direction.WEST);
+            }
+            else if (directionFromRoomOneToRoomTwo == Direction.WEST)
+            {
+                roomTwo.Connect(roomOne, Direction.EAST);
+            }
+        }
     }
 }
