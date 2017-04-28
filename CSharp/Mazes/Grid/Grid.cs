@@ -1,11 +1,7 @@
-﻿using Grid;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GridGUI
+namespace Grid
 {
     public sealed class Grid : IGrid
     {
@@ -58,6 +54,19 @@ namespace GridGUI
             }
         }
 
+        public IEnumerator<Room> AllRooms()
+        {
+            IEnumerable<Room> toReturn = new List<Room>();
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
+            {
+                for (int columnIndex = 0; columnIndex < columns; columnIndex++)
+                {
+                    yield return rooms[rowIndex][columnIndex];
+                }
+            }
+        }
+
+
         public Room this[int row, int column]
         {
             get
@@ -87,11 +96,5 @@ namespace GridGUI
 
             return true;
         }
-
-
-
-        
-
-
     }
 }

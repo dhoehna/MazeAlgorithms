@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static GridGUI.Grid;
+using static Grid.Grid;
 
-namespace GridGUI
+namespace Grid
 {
     public sealed class Room
     {
