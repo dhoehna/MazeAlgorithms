@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Grid
 {
-    public sealed class Grid : IGrid
+    public sealed class Grid :  IGrid
     {
         public enum Direction
         {
@@ -13,7 +14,6 @@ namespace Grid
             WEST
         }
 
-        
         private Room[][] rooms;
         private int rows;
         private int columns;
@@ -43,20 +43,19 @@ namespace Grid
 
             GridPosition positionOfNeighborToConnectWith = RoomHelper.GetNeighborLocation(room, directionToConect);
 
-            if(IsValidPosition(positionOfNeighborToConnectWith))
+            if (IsValidPosition(positionOfNeighborToConnectWith))
             {
                 roomToConnectWith = this[positionOfNeighborToConnectWith.row, positionOfNeighborToConnectWith.column];
             }
 
-            if(roomToConnectWith != null)
+            if (roomToConnectWith != null)
             {
                 room.Connect(roomToConnectWith, directionToConect);
             }
         }
 
-        public IEnumerator<Room> AllRooms()
+        public IEnumerator<Room> GetRoomsSequantially()
         {
-            IEnumerable<Room> toReturn = new List<Room>();
             for (int rowIndex = 0; rowIndex < rows; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < columns; columnIndex++)
@@ -84,12 +83,12 @@ namespace Grid
 
         private bool IsValidPosition(GridPosition gridPosition)
         {
-            if(gridPosition.row < 0 || gridPosition.row > rows)
+            if (gridPosition.row < 0 || gridPosition.row > rows)
             {
                 return false;
             }
 
-            if(gridPosition.column < 0 || gridPosition.column > columns)
+            if (gridPosition.column < 0 || gridPosition.column > columns)
             {
                 return false;
             }

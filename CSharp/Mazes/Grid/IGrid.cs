@@ -9,5 +9,6 @@ namespace Grid
     public interface IGrid
     {
         void Connect(Room roomToConnectWith, Direction directionToConnect);
+        IEnumerator<Room> GetRoomsSequantially()
     }
 }

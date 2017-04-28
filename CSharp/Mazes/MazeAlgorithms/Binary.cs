@@ -3,11 +3,14 @@ using System;
 using Grid;
 namespace MazeAlgorithms
 {
-    public class Binary
+    public class Binary :IMazeAlgorithm
     {
-        public void DoAction(IGrid gridToManipulate)
+        public void TurnGridIntoMaze(IGrid gridToManipulate)
         {
+            foreach(Room room in gridToManipulate.GetRoomsSequantially())
+            {
 
+            }
         }
     }
 }
