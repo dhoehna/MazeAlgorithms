@@ -8,10 +8,12 @@ namespace Grid
     {
         public enum Direction
         {
-            NORTH,
+            DIRECTION_START = 1,
+            NORTH = 1,
             SOUTH,
             EAST,
-            WEST
+            WEST,
+            DIRECTION_END = 4
         }
 
         private Room[][] rooms;

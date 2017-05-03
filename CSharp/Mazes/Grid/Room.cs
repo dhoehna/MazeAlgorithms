@@ -22,6 +22,14 @@ namespace Grid
             neighbors = new Dictionary<Direction, Room>();
         }
 
+        public Room(GridPosition gridPosition)
+        {
+            this.row = gridPosition.row;
+            this.column = gridPosition.column;
+
+            neighbors = new Dictionary<Direction, Room>();
+        }
+
         public void Connect(Room roomToConnectWith, Direction direction)
         {
             if(neighbors.ContainsKey(direction))

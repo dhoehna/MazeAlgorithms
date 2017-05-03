@@ -8,9 +8,10 @@ namespace Grid
 {
     public interface IGrid
     {
-        void Connect(Room roomToConnectWith, Direction directionToConnect);
+        void Connect(Room room, Direction directionToConnect);
         List<Room> GetRooms();
         int GetRows();
         int GetColumns();
+        Room this[int row, int column] { get; }
     }
 }
