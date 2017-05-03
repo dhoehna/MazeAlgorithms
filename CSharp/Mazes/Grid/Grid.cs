@@ -37,6 +37,16 @@ namespace Grid
             }
         }
 
+        public int GetRows()
+        {
+            return rows;
+        }
+
+        public int GetColumns()
+        {
+            return columns;
+        }
+
         public void Connect(Room room, Direction directionToConect)
         {
             Room roomToConnectWith = null;
@@ -54,15 +64,18 @@ namespace Grid
             }
         }
 
-        public IEnumerator<Room> GetRoomsSequantially()
+        public List<Room> GetRooms()
         {
+            List<Room> roomsToReturn = new List<Room>();
             for (int rowIndex = 0; rowIndex < rows; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < columns; columnIndex++)
                 {
-                    yield return rooms[rowIndex][columnIndex];
+                    roomsToReturn.Add(rooms[rowIndex][columnIndex]);
                 }
             }
+
+            return roomsToReturn;
         }
 
 
@@ -95,5 +108,7 @@ namespace Grid
 
             return true;
         }
+
+        
     }
 }
