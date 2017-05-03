@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mazes</RootNamespace>
     <AssemblyName>Mazes</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +49,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Grid\Grid.csproj">
+      <Project>{a03b8eb3-8218-4417-a019-8472c3654afa}</Project>
+      <Name>Grid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MazeAlgorithms\MazeAlgorithms.csproj">
+      <Project>{fbbac903-4911-4fbe-ac98-3d4c7d061f58}</Project>
+      <Name>MazeAlgorithms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MazeGenerator\MazeGenerator.csproj">
+      <Project>{cd10bd10-f30b-4065-b82e-213c6703ba76}</Project>
+      <Name>MazeGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
