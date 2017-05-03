@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static Grid.Grid;
 
 namespace Grid
@@ -51,5 +52,34 @@ namespace Grid
                 roomTwo.Connect(roomOne, Direction.EAST);
             }
         }
+
+        public static List<Direction> GetBoundriesRoomIsOn(Room room, int rows, int columns)
+        {
+            List<Direction> edgeDirections = new List<Direction>();
+
+            if (room.row == 0)
+            {
+                edgeDirections.Add(Direction.NORTH);
+            }
+
+            if (room.row == rows)
+            {
+                edgeDirections.Add(Direction.SOUTH);
+            }
+
+            if (room.column == 0)
+            {
+                edgeDirections.Add(Direction.WEST);
+            }
+
+            if (room.column == columns)
+            {
+                edgeDirections.Add(Direction.EAST);
+            }
+
+            return edgeDirections;
+        }
+
+
     }
 }
