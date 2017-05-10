@@ -8,12 +8,10 @@ namespace Grid
     {
         public enum Direction
         {
-            DIRECTION_START = 1,
-            NORTH = 1,
+            NORTH,
             SOUTH,
             EAST,
-            WEST,
-            DIRECTION_END = 4
+            WEST
         }
 
         private Room[][] rooms;
@@ -98,12 +96,12 @@ namespace Grid
 
         private bool IsValidPosition(GridPosition gridPosition)
         {
-            if (gridPosition.row < 0 || gridPosition.row > rows)
+            if (gridPosition.row < 0 || gridPosition.row >= rows)
             {
                 return false;
             }
 
-            if (gridPosition.column < 0 || gridPosition.column > columns)
+            if (gridPosition.column < 0 || gridPosition.column >= columns)
             {
                 return false;
             }

@@ -12,10 +12,10 @@ namespace MazeAlgorithms
 
         private enum ValidConnectionDirections
         {
-            NULL = 0,
-            NORTH = 1,
-            EAST
+            NORTH = Direction.NORTH,
+            EAST = Direction.EAST
         }
+
         public void TurnGridIntoMaze(IGrid gridToManipulate)
         {
             List<Room> rooms = gridToManipulate.GetRooms();
@@ -27,11 +27,20 @@ namespace MazeAlgorithms
             {
                 List<Direction> boundries = RoomHelper.GetBoundriesRoomIsOn(room, rows, columns);
 
-                ValidConnectionDirections directionToConnect = ValidConnectionDirections.NULL;
+                ValidConnectionDirections? directionToConnect = null;
                 //If not on the north or east edge
                 if(!(IsRoomOnNorthBoundry(boundries) || IsRoomOnEastBoundry(boundries)))
                 {
-                    directionToConnect = (ValidConnectionDirections) randomDirectionGenerator.Next((int)ValidConnectionDirections.NORTH, (int)ValidConnectionDirections.EAST);
+                    int direction = randomDirectionGenerator.Next(0, 1);
+
+                    if(direction == 0)
+                    {
+                        directionToConnect = ValidConnectionDirections.NORTH;
+                    }
+                    else if (direction == 1)
+                    {
+                        directionToConnect = ValidConnectionDirections.EAST;
+                    }
                 }
                 else if(IsRoomOnNorthBoundry(boundries))
                 {
@@ -42,7 +51,7 @@ namespace MazeAlgorithms
                     directionToConnect = ValidConnectionDirections.NORTH;
                 }
 
-                if(directionToConnect != ValidConnectionDirections.NULL)
+                if(directionToConnect != null)
                 {
                     gridToManipulate.Connect(room, (Direction)directionToConnect);
                 }

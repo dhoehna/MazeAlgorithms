@@ -19,11 +19,11 @@ namespace Grid
             }
             else if (direction == Direction.EAST)
             {
-                return new GridPosition(room.row, room.column - 1);
+                return new GridPosition(room.row, room.column + 1);
             }
             else if (direction == Direction.WEST)
             {
-                return new GridPosition(room.row, room.column + 1);
+                return new GridPosition(room.row, room.column - 1);
             }
             else
             {
