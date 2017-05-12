@@ -13,6 +13,7 @@ namespace Grid
         public int column { get; private set; }
 
         private Dictionary<Direction, Room> neighbors;
+        
 
         public Room(int row, int column)
         {
@@ -38,6 +39,11 @@ namespace Grid
             }
 
             neighbors[direction] = roomToConnectWith;
+        }
+
+        public List<Direction> Neighbors()
+        {
+            return neighbors.Keys.ToList();
         }
 
     }
