@@ -28,19 +28,13 @@ namespace MazeAlgorithms
                 List<Direction> boundries = RoomHelper.GetBoundriesRoomIsOn(room, rows, columns);
 
                 ValidConnectionDirections? directionToConnect = null;
-                //If not on the north or east edge
-                if(!(IsRoomOnNorthBoundry(boundries) || IsRoomOnEastBoundry(boundries)))
+
+
+                
+
+                if(IsRoomOnNorthBoundry(boundries) && IsRoomOnEastBoundry(boundries))
                 {
-                    int direction = randomDirectionGenerator.Next(0, 1);
-                    Console.WriteLine(direction);
-                    if(direction == 0)
-                    {
-                        directionToConnect = ValidConnectionDirections.NORTH;
-                    }
-                    else if (direction == 1)
-                    {
-                        directionToConnect = ValidConnectionDirections.EAST;
-                    }
+                    //Don't do anything.
                 }
                 else if(IsRoomOnNorthBoundry(boundries))
                 {
@@ -50,32 +44,47 @@ namespace MazeAlgorithms
                 {
                     directionToConnect = ValidConnectionDirections.NORTH;
                 }
+                else
+                {
+                    int direction = randomDirectionGenerator.Next(0, 2);
+
+                    if(direction == 0)
+                    {
+                        directionToConnect = ValidConnectionDirections.NORTH;
+                    }
+                    else if(direction == 1)
+                    {
+                        directionToConnect = ValidConnectionDirections.EAST;
+                    }
+                }
+
 
                 if(directionToConnect != null)
                 {
                     gridToManipulate.Connect(room, (Direction)directionToConnect);
                 }
+
             }
         }
 
         private bool IsRoomOnNorthBoundry(List<Direction> boundries)
         {
-            return boundries.Any(boundry => boundry.Equals(Direction.NORTH));
+            return boundries.Contains(Direction.NORTH);
         }
 
         private bool IsRoomOnSouthBoundry(List<Direction> boundries)
         {
-            return boundries.Any(boundry => boundry.Equals(Direction.SOUTH));
+            return boundries.Contains(Direction.SOUTH);
         }
 
         private bool IsRoomOnEastBoundry(List<Direction> boundries)
         {
-            return boundries.Any(boundry => boundry.Equals(Direction.EAST));
+            return boundries.Contains(Direction.EAST);
         }
 
         private bool IsRoomOnWestBoundry(List<Direction> boundries)
         {
-            return boundries.Any(boundry => boundry.Equals(Direction.WEST));
+            return boundries.Contains(Direction.WEST);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Grid
 
             if (roomToConnectWith != null)
             {
-                room.Connect(roomToConnectWith, directionToConect);
+                RoomHelper.ConnectRooms(room, roomToConnectWith, directionToConect);
             }
         }
 

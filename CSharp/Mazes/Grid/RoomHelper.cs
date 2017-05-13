@@ -62,7 +62,7 @@ namespace Grid
                 edgeDirections.Add(Direction.NORTH);
             }
 
-            if (room.row == rows)
+            if (room.row == (rows - 1))
             {
                 edgeDirections.Add(Direction.SOUTH);
             }
@@ -72,7 +72,7 @@ namespace Grid
                 edgeDirections.Add(Direction.WEST);
             }
 
-            if (room.column == columns)
+            if (room.column == (columns - 1))
             {
                 edgeDirections.Add(Direction.EAST);
             }

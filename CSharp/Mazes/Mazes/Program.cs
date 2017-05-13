@@ -61,43 +61,27 @@ namespace Mazes
                 int xOfLowerRight = (room.column * 100) + 100;
                 int yOfLowerRight = (room.row * 100) + 100;
 
-                //If on north wall
-                if (room.row == 0)
+                if (!room.Neighbors().Contains(Direction.NORTH))
                 {
-                    tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft + 100, 0);
+                    tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfLowerRight, yOfUpperLeft);
                 }
 
-                //if on south wall
-                if (room.row == grid.GetRows() - 1)
+                if (!room.Neighbors().Contains(Direction.WEST))
                 {
-                    tool.DrawLine(blackPen, xOfLowerRight - 100, yOfLowerRight, xOfLowerRight, yOfLowerRight);
-                }
-
-                //If on east wall
-                if (room.column == 0)
-                {
-                    tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft, yOfUpperLeft + 100);
-                }
-
-                //If on west wall
-                if (room.column == grid.GetColumns() - 1)
-                {
-                    tool.DrawLine(blackPen, xOfLowerRight, yOfUpperLeft, xOfLowerRight, yOfUpperLeft + 100);
-                }
-
-                //wait.  So a neighbor should not have a line drawn between them.  So each cel will
-                //worry about the north and east walls.
-
-                //Not on the north row
-                if(!room.Neighbors().Contains(Direction.NORTH))
-                {
-                    tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft + 100, yOfUpperLeft);
+                    tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft, yOfLowerRight);
                 }
 
                 if(!room.Neighbors().Contains(Direction.EAST))
                 {
-                    tool.DrawLine(blackPen, xOfLowerRight, yOfLowerRight - 100, xOfLowerRight, yOfLowerRight);
+                    tool.DrawLine(blackPen, xOfLowerRight, yOfUpperLeft, xOfLowerRight, yOfLowerRight);
                 }
+
+                if(!room.Neighbors().Contains(Direction.SOUTH))
+                {
+                    tool.DrawLine(blackPen, xOfUpperLeft, yOfLowerRight, xOfLowerRight, yOfLowerRight);
+                }
+                //tool.DrawLine(blackPen, xOfLowerRight - 100, yOfLowerRight, xOfLowerRight, yOfLowerRight);
+                //tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft, yOfLowerRight);
             }
 
             gridPng.Save("Hello.png");
