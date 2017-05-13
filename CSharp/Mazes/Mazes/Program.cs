@@ -12,54 +12,36 @@ namespace Mazes
 {
     class Program
     {
+        const int ROWS = 100;
+        const int COLUMNS = 100;
+
+        const int WIDTH_IN_PIXLES = 500;
+        const int HEITH_IN_PIXLES = 500;
+
+        const int PEN_THICKNESS_IN_PIXLES = 3;
         static void Main(string[] args)
         {
-            /*
-             * This is a 5 by 5 grid.
-             * Each cell is 100 pixles
-             * so that means the image has to be 10 * 5, or 500 pixles wide and long
-             */
-            //Bitmap b = new Bitmap(500, 500);
-
-            //Graphics g = Graphics.FromImage(b);
-
-
-            //Pen blackPen = new Pen(Color.Black, 3);
-
-            ////Border
-            //g.DrawRectangle(blackPen, 0, 0, 500, 500);
-
-
-
-
-            //b.Save("Hello.png");
-
-            //blackPen.Dispose();
-
-            //g.Dispose();
-
-            //b.Dispose();
-            
-            IGrid grid = new Grid.Grid(5, 5);
+            IGrid grid = new Grid.Grid(ROWS, COLUMNS);
             IMazeAlgorithm binaryAlgorithm = new Binary();
 
             MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm);
             generator.ApplyAlgorithm();
 
-            Bitmap gridPng = new Bitmap(500, 500);
+            Bitmap gridPng = new Bitmap(WIDTH_IN_PIXLES, HEITH_IN_PIXLES);
             Graphics tool = Graphics.FromImage(gridPng);
-            Pen blackPen = new Pen(Color.Black, 3);
+            Pen blackPen = new Pen(Color.Black, PEN_THICKNESS_IN_PIXLES);
 
             List<Room> rooms = grid.GetRooms();
 
-            
+            int cellWidth = WIDTH_IN_PIXLES / COLUMNS;
+            int cellHeigth = HEITH_IN_PIXLES / ROWS;
 
             foreach (Room room in rooms)
             {
-                int xOfUpperLeft = room.column * 100;
-                int yOfUpperLeft = room.row * 100;
-                int xOfLowerRight = (room.column * 100) + 100;
-                int yOfLowerRight = (room.row * 100) + 100;
+                int xOfUpperLeft = room.column * cellWidth;
+                int yOfUpperLeft = room.row * cellHeigth;
+                int xOfLowerRight = (room.column * cellWidth) + cellWidth;
+                int yOfLowerRight = (room.row * cellHeigth) + cellHeigth;
 
                 if (!room.Neighbors().Contains(Direction.NORTH))
                 {
