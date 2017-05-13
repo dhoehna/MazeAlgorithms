@@ -32,7 +32,7 @@ namespace MazeAlgorithms
                 if(!(IsRoomOnNorthBoundry(boundries) || IsRoomOnEastBoundry(boundries)))
                 {
                     int direction = randomDirectionGenerator.Next(0, 1);
-
+                    Console.WriteLine(direction);
                     if(direction == 0)
                     {
                         directionToConnect = ValidConnectionDirections.NORTH;
