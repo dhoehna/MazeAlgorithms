@@ -8,4 +8,8 @@
     <ProjectReference Include="..\Grid\Grid.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="1.6.1" />
+  </ItemGroup>
+
 </Project>

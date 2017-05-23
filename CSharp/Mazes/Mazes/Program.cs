@@ -12,8 +12,8 @@ namespace Mazes
 {
     class Program
     {
-        const int ROWS = 100;
-        const int COLUMNS = 100;
+        const int ROWS = 10;
+        const int COLUMNS = 10;
 
         const int WIDTH_IN_PIXLES = 500;
         const int HEITH_IN_PIXLES = 500;
