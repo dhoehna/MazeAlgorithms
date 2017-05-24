@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Grid\Grid.csproj" />
     <ProjectReference Include="..\MazeAlgorithms\MazeAlgorithms.csproj" />
-    <ProjectReference Include="..\Solver\Solver.csproj" />
+    <ProjectReference Include="..\Solver\DistanceAlgorithms.csproj" />
   </ItemGroup>
 
   <ItemGroup>

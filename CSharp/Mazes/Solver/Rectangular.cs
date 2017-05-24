@@ -2,18 +2,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Solver
+namespace DistanceAlgorithms
 {
-    public class DijkstraSolver : ISolver
+    public class Rectangular : IDistanceAlgorithm
     {
-        public void Solve(IGrid gridToSolve, GridPosition startingCell)
+        public int GetDistances(IGrid grid, GridPosition startingCell)
         {
             Stack<Room> roomsToVisit = new Stack<Room>();
 
-            Room startingRoom = gridToSolve[startingCell.row, startingCell.column];
+            Room startingRoom = grid[startingCell.row, startingCell.column];
             startingRoom.distance = 0;
             roomsToVisit.Push(startingRoom);
 
+            int maxDistance = 0;
             while(roomsToVisit.Count != 0)
             {
                 Room currentRoom = roomsToVisit.Pop();
@@ -26,10 +27,14 @@ namespace Solver
                     if(!neighbor.visited)
                     {
                         neighbor.distance = currentRoom.distance + 1;
+
+                        maxDistance = Math.Max(maxDistance, neighbor.distance);
                         roomsToVisit.Push(neighbor);
                     }
                 }
             }
+
+            return maxDistance;
         }
     }
 }

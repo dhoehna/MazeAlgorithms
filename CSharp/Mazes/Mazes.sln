@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeAlgorithms", "MazeAlgor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeGenerator", "MazeGenerator\MazeGenerator.csproj", "{CD10BD10-F30B-4065-B82E-213C6703BA76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solver", "Solver\Solver.csproj", "{33E62D51-FA58-4FBC-BAAC-D5AC9F0FCF2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistanceAlgorithms", "Solver\DistanceAlgorithms.csproj", "{33E62D51-FA58-4FBC-BAAC-D5AC9F0FCF2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -55,9 +55,9 @@
       <Project>{cd10bd10-f30b-4065-b82e-213c6703ba76}</Project>
       <Name>MazeGenerator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Solver\Solver.csproj">
+    <ProjectReference Include="..\Solver\DistanceAlgorithms.csproj">
       <Project>{33e62d51-fa58-4fbc-baac-d5ac9f0fcf2b}</Project>
-      <Name>Solver</Name>
+      <Name>DistanceAlgorithms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

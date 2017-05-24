@@ -1,6 +1,6 @@
-﻿using Grid;
+﻿using DistanceAlgorithms;
+using Grid;
 using MazeAlgorithms;
-using Solver;
 
 namespace MazeGenerator
 {
@@ -8,9 +8,9 @@ namespace MazeGenerator
     {
         private IGrid gridToManipulate;
         private IMazeAlgorithm algorithmToApply;
-        private ISolver solver;
+        private IDistanceAlgorithm solver;
 
-        public Generator(IGrid gridToManipulate, IMazeAlgorithm algorithmToApply, ISolver solver)
+        public Generator(IGrid gridToManipulate, IMazeAlgorithm algorithmToApply, IDistanceAlgorithm solver)
         {
             this.gridToManipulate = gridToManipulate;
             this.algorithmToApply = algorithmToApply;
@@ -22,12 +22,17 @@ namespace MazeGenerator
             algorithmToApply.TurnGridIntoMaze(gridToManipulate);
         }
 
-        public void SolveMaze(GridPosition startingCell)
+        public int SolveMaze(GridPosition startingCell)
         {
             if (gridToManipulate.IsValidPosition(startingCell))
             {
-                solver.Solve(gridToManipulate, startingCell);
+                return solver.GetDistances(gridToManipulate, startingCell);
             }
+            else
+            {
+                return 0;
+            }
+            
         }
     }
 }
