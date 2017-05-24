@@ -35,6 +35,8 @@ namespace Mazes
             Graphics tool = Graphics.FromImage(gridPng);
             Pen blackPen = new Pen(Color.Black, PEN_THICKNESS_IN_PIXLES);
 
+            
+
             List<Room> rooms = grid.GetRooms();
 
             int cellWidth = WIDTH_IN_PIXLES / COLUMNS;
@@ -66,8 +68,18 @@ namespace Mazes
                 {
                     tool.DrawLine(blackPen, xOfUpperLeft, yOfLowerRight, xOfLowerRight, yOfLowerRight);
                 }
-                //tool.DrawLine(blackPen, xOfLowerRight - 100, yOfLowerRight, xOfLowerRight, yOfLowerRight);
-                //tool.DrawLine(blackPen, xOfUpperLeft, yOfUpperLeft, xOfUpperLeft, yOfLowerRight);
+
+
+                double intensity = ((double)maxDistance - (double)room.distance) / ((double)maxDistance);
+                double dark = Math.Round((255d * intensity));
+                double bright = 128d + Math.Round(127d * intensity);
+
+                Color roomColor = Color.FromArgb((int)dark, (int)bright, (int)dark);
+
+                Brush roomColorBrush = new SolidBrush(roomColor);
+
+                tool.FillRectangle(roomColorBrush, xOfUpperLeft, yOfUpperLeft, cellWidth, cellHeigth);
+                
             }
 
             gridPng.Save("Hello.png");
