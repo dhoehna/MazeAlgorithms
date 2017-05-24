@@ -13,5 +13,6 @@ namespace Grid
         int GetRows();
         int GetColumns();
         Room this[int row, int column] { get; }
+        bool IsValidPosition(GridPosition gridPosition);
     }
 }

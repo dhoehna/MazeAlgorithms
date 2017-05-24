@@ -10,10 +10,11 @@ namespace MazeGenerator
         private IMazeAlgorithm algorithmToApply;
         private ISolver solver;
 
-        public Generator(IGrid gridToManipulate, IMazeAlgorithm algorithmToApply)
+        public Generator(IGrid gridToManipulate, IMazeAlgorithm algorithmToApply, ISolver solver)
         {
             this.gridToManipulate = gridToManipulate;
             this.algorithmToApply = algorithmToApply;
+            this.solver = solver;
         }
 
         public void ApplyAlgorithm()
@@ -21,9 +22,12 @@ namespace MazeGenerator
             algorithmToApply.TurnGridIntoMaze(gridToManipulate);
         }
 
-        public void SolveMaze()
+        public void SolveMaze(GridPosition startingCell)
         {
-            solver.Solve(gridToManipulate);
+            if (gridToManipulate.IsValidPosition(startingCell))
+            {
+                solver.Solve(gridToManipulate, startingCell);
+            }
         }
     }
 }

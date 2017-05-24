@@ -7,6 +7,6 @@ namespace Solver
 {
     public interface ISolver
     {
-        void Solve(IGrid gridToSolve);
+        void Solve(IGrid gridToSolve, GridPosition startingCell);
     }
 }

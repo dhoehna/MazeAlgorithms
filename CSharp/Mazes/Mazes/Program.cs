@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Grid;
 using static Grid.Grid;
+using Solver;
 
 namespace Mazes
 {
@@ -23,9 +24,11 @@ namespace Mazes
         {
             IGrid grid = new Grid.Grid(ROWS, COLUMNS);
             IMazeAlgorithm binaryAlgorithm = new Binary();
+            ISolver solver = new DijkstraSolver();
 
-            MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm);
+            MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm, solver);
             generator.ApplyAlgorithm();
+            generator.SolveMaze(new GridPosition(0, 0));
             
 
             Bitmap gridPng = new Bitmap(WIDTH_IN_PIXLES, HEITH_IN_PIXLES);
