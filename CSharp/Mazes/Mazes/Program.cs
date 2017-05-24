@@ -26,6 +26,7 @@ namespace Mazes
 
             MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm);
             generator.ApplyAlgorithm();
+            
 
             Bitmap gridPng = new Bitmap(WIDTH_IN_PIXLES, HEITH_IN_PIXLES);
             Graphics tool = Graphics.FromImage(gridPng);

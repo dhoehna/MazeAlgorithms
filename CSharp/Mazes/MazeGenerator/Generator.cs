@@ -1,6 +1,6 @@
 ﻿using Grid;
 using MazeAlgorithms;
-using System;
+using Solver;
 
 namespace MazeGenerator
 {
@@ -8,6 +8,7 @@ namespace MazeGenerator
     {
         private IGrid gridToManipulate;
         private IMazeAlgorithm algorithmToApply;
+        private ISolver solver;
 
         public Generator(IGrid gridToManipulate, IMazeAlgorithm algorithmToApply)
         {
@@ -18,6 +19,11 @@ namespace MazeGenerator
         public void ApplyAlgorithm()
         {
             algorithmToApply.TurnGridIntoMaze(gridToManipulate);
+        }
+
+        public void SolveMaze()
+        {
+            solver.Solve(gridToManipulate);
         }
     }
 }

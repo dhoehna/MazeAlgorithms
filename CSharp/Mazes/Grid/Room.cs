@@ -11,6 +11,8 @@ namespace Grid
     {
         public int row { get; private set; }
         public int column { get; private set; }
+        public int distance { get; set; }
+        public bool visited { get; set; }
 
         private Dictionary<Direction, Room> neighbors;
         
@@ -44,6 +46,11 @@ namespace Grid
         public List<Direction> Neighbors()
         {
             return neighbors.Keys.ToList();
+        }
+
+        public List<Room> NeighborsAsRooms()
+        {
+            return neighbors.Values.ToList();
         }
 
     }

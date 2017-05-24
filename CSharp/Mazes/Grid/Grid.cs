@@ -78,6 +78,48 @@ namespace Grid
             return roomsToReturn;
         }
 
+        public void SetDistances(int rowIndex, int columnIndex)
+        {
+            if(IsValidPosition(new GridPosition(rowIndex, columnIndex)))
+            {
+                Room startingRoom = this[rowIndex, columnIndex];
+
+                startingRoom.distance = 0;
+                startingRoom.visited = true;
+
+                Stack<Room> rooms = new Stack<Room>();
+
+                List<Room> startingRoomNeighbors = startingRoom.NeighborsAsRooms();
+
+                foreach(Room thisRoom in startingRoomNeighbors)
+                {
+                    if (!thisRoom.visited)
+                    {
+                        thisRoom.distance = 1;
+                        rooms.Push(thisRoom);
+                    }
+                }
+
+                while(rooms.Count != 0)
+                {
+                    Room thisRoom = rooms.Pop();
+                    thisRoom.visited = true;
+
+                    List<Room> neighbors = thisRoom.NeighborsAsRooms();
+
+                    foreach(Room neighbor in neighbors)
+                    {
+                        if(!neighbor.visited)
+                        {
+                            neighbor.distance = thisRoom.distance + 1;
+                            rooms.Push(neighbor);
+                        }
+                    }
+                }
+
+            }
+        }
+
 
         public Room this[int row, int column]
         {
