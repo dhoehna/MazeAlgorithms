@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using static Grid.Grid;
 using System.Linq;
 
+/*
+ * The Algorithm used to generate information for the maze.
+ */
+
 namespace MazeAlgorithms
 {
     public class Binary : IMazeAlgorithm
@@ -18,7 +22,7 @@ namespace MazeAlgorithms
 
         public void TurnGridIntoMaze(IGrid gridToManipulate)
         {
-            List<Room> rooms = gridToManipulate.GetRooms();
+            List<Room> rooms = gridToManipulate.GetRooms(); // use a binary tree instead of a list?
             int rows = gridToManipulate.GetRows();
             int columns = gridToManipulate.GetColumns();
             Random randomDirectionGenerator = new Random();
@@ -27,7 +31,7 @@ namespace MazeAlgorithms
             {
                 List<Direction> boundries = RoomHelper.GetBoundriesRoomIsOn(room, rows, columns);
 
-                ValidConnectionDirections? directionToConnect = null;
+                ValidConnectionDirections? directionToConnect = null; // Makes this a nullable type
 
 
                 
@@ -44,7 +48,7 @@ namespace MazeAlgorithms
                 {
                     directionToConnect = ValidConnectionDirections.NORTH;
                 }
-                else
+                else // if the current room is not on a boundry then connect in a random direction
                 {
                     int direction = randomDirectionGenerator.Next(0, 2);
 
@@ -59,7 +63,7 @@ namespace MazeAlgorithms
                 }
 
 
-                if(directionToConnect != null)
+                if(directionToConnect != null) // if there is a direction to connect to
                 {
                     gridToManipulate.Connect(room, (Direction)directionToConnect);
                 }

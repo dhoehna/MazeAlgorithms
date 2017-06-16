@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * The purpose of Grid is to create the maze by connecting and creating rooms.
+ * it creates rooms by creating a 2d array of rooms.
+ */
+
 namespace Grid
 {
     public sealed class Grid :  IGrid
@@ -47,6 +52,10 @@ namespace Grid
             return columns;
         }
 
+        /*
+         * This method is used to connect the rooms. It starts with the roomtoconnectwith which is initially empty (null).
+         * It utilizes a roomhelper object to connect the rooms, which is in reality how rooms are actually created and extended.
+         */
         public void Connect(Room room, Direction directionToConect)
         {
             Room roomToConnectWith = null;
