@@ -9,25 +9,30 @@ namespace Grid
 
         public static GridPosition GetNeighborLocation(Room room, Direction direction)
         {
-            if(direction == Direction.NORTH) // move up a row
+            // move up a row
+            if (direction == Direction.NORTH) 
             {
                 return new GridPosition(room.row - 1, room.column);
             }
-            else if (direction == Direction.SOUTH) // move back a row
+            // move back a row
+            else if (direction == Direction.SOUTH) 
             {
                 return new GridPosition(room.row + 1, room.column);
             }
-            else if (direction == Direction.EAST) // move back a column
+            // move back a column
+            else if (direction == Direction.EAST) 
             {
                 return new GridPosition(room.row, room.column + 1);
             }
-            else if (direction == Direction.WEST) // move up a column
+            // move up a column
+            else if (direction == Direction.WEST) 
             {
                 return new GridPosition(room.row, room.column - 1);
             }
             else
             {
-                throw new ArgumentException($"{direction} is not a valid direction."); // There is no room in this direction
+                // There is no room in this direction
+                throw new ArgumentException($"{direction} is not a valid direction."); 
             }
         }
 
@@ -53,7 +58,8 @@ namespace Grid
             }
         }
 
-        public static List<Direction> GetBoundriesRoomIsOn(Room room, int rows, int columns) // retuns if the room is on any boundaries of the grid
+        // retuns if the room is on any boundaries of the grid
+        public static List<Direction> GetBoundriesRoomIsOn(Room room, int rows, int columns) 
         {
             List<Direction> edgeDirections = new List<Direction>();
 

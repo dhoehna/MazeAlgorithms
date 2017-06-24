@@ -17,6 +17,7 @@ namespace MazeGenerator
             this.solver = solver;
         }
 
+        // The algorithm that is used to create the rooms is applied here.
         public void ApplyAlgorithm()
         {
             algorithmToApply.TurnGridIntoMaze(gridToManipulate);

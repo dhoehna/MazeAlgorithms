@@ -11,10 +11,11 @@ namespace Grid
     {
         public int row { get; private set; }
         public int column { get; private set; }
-        public int distance { get; set; } //  What is distance?
+        public int distance { get; set; } 
         public bool visited { get; set; }
 
-        private Dictionary<Direction, Room> neighbors; // Keeps track of the neighbors of said room to create a linked list type structure
+        // Keeps track of the neighbors of said room to create a linked list type structure
+        private Dictionary<Direction, Room> neighbors; 
         
         // Constructor
         public Room(int row, int column)
@@ -25,19 +26,20 @@ namespace Grid
             neighbors = new Dictionary<Direction, Room>();
         }
 
-        // Constructor
         public Room(GridPosition gridPosition)
         {
             this.row = gridPosition.row;
             this.column = gridPosition.column;
 
-            neighbors = new Dictionary<Direction, Room>(); // The direction of the room is the key.
+            // The direction of the room is the key.
+            neighbors = new Dictionary<Direction, Room>(); 
         }
 
         
         public void Connect(Room roomToConnectWith, Direction direction)
         {
-            if(neighbors.ContainsKey(direction)) // If there is already a room in the direction that we are connecting the rooms together then remove it
+            // If there is already a room in the direction that we are connecting the rooms together then remove it
+            if (neighbors.ContainsKey(direction)) 
             {
                 neighbors.Remove(direction);
             }

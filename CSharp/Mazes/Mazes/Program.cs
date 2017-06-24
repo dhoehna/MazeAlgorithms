@@ -29,32 +29,37 @@ namespace Mazes
         const int PEN_THICKNESS_IN_PIXLES = 3;
         static void Main(string[] args)
         {
-            IGrid grid = new Grid.Grid(ROWS, COLUMNS); // Create the base grid
-            IMazeAlgorithm binaryAlgorithm = new Binary(); // Create the algorithm to generate the rooms
-            IDistanceAlgorithm solver = new Rectangular(); // Create the distance tracker
+            // Create the base grid
+            IGrid grid = new Grid.Grid(ROWS, COLUMNS);
+            // Create the algorithm to generate the rooms
+            IMazeAlgorithm binaryAlgorithm = new Binary();
+            // Create the distance tracker
+            IDistanceAlgorithm solver = new Rectangular();
 
+            // Generate the maze
             MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm, solver);
-            generator.ApplyAlgorithm();
+            // Apply the algorithm to the generated maze
+            generator.ApplyAlgorithm(); 
             int maxDistance = generator.SolveMaze(new GridPosition(0, 0));
-            
 
-            Bitmap gridPng = new Bitmap(WIDTH_IN_PIXLES, HEITH_IN_PIXLES); // create the .png with WIDTH_IN_PIXLES width and HEITH_IN_PIXELS height
+            // create the .png with WIDTH_IN_PIXLES width and HEITH_IN_PIXELS height
+            Bitmap gridPng = new Bitmap(WIDTH_IN_PIXLES, HEITH_IN_PIXLES); 
             Graphics tool = Graphics.FromImage(gridPng);
             Pen blackPen = new Pen(Color.Black, PEN_THICKNESS_IN_PIXLES);
 
-            
-
-            List<Room> rooms = grid.GetRooms(); // create a list of rooms from the generated grid
+            // create a list of rooms from the generated grid
+            List<Room> rooms = grid.GetRooms(); 
 
             int cellWidth = WIDTH_IN_PIXLES / COLUMNS;
             int cellHeigth = HEITH_IN_PIXLES / ROWS;
 
             // Draw a line if there is no room in any direction. This was generated according to the roomstoconnectwith that was generated.
-            foreach (Room room in rooms) // for each room in the list rooms
+            foreach (Room room in rooms)
             {
                 int xOfUpperLeft = room.column * cellWidth;
                 int yOfUpperLeft = room.row * cellHeigth;
-                int xOfLowerRight = (room.column * cellWidth) + cellWidth; // adding cellwidth shifts the position to the right
+                // adding cellwidth shifts the position to the right
+                int xOfLowerRight = (room.column * cellWidth) + cellWidth; 
                 int yOfLowerRight = (room.row * cellHeigth) + cellHeigth;
 
                 if (!room.Neighbors().Contains(Direction.NORTH))

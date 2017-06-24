@@ -22,7 +22,7 @@ namespace MazeAlgorithms
 
         public void TurnGridIntoMaze(IGrid gridToManipulate)
         {
-            List<Room> rooms = gridToManipulate.GetRooms(); // use a binary tree instead of a list?
+            List<Room> rooms = gridToManipulate.GetRooms();
             int rows = gridToManipulate.GetRows();
             int columns = gridToManipulate.GetColumns();
             Random randomDirectionGenerator = new Random();
@@ -31,8 +31,7 @@ namespace MazeAlgorithms
             {
                 List<Direction> boundries = RoomHelper.GetBoundriesRoomIsOn(room, rows, columns);
 
-                ValidConnectionDirections? directionToConnect = null; // Makes this a nullable type
-
+                ValidConnectionDirections? directionToConnect = null; 
 
                 
 
@@ -48,7 +47,8 @@ namespace MazeAlgorithms
                 {
                     directionToConnect = ValidConnectionDirections.NORTH;
                 }
-                else // if the current room is not on a boundry then connect in a random direction
+                // if the current room is not on a boundry then connect in a random direction
+                else
                 {
                     int direction = randomDirectionGenerator.Next(0, 2);
 
@@ -62,8 +62,8 @@ namespace MazeAlgorithms
                     }
                 }
 
-
-                if(directionToConnect != null) // if there is a direction to connect to
+                // if there is a direction to connect to
+                if (directionToConnect != null) 
                 {
                     gridToManipulate.Connect(room, (Direction)directionToConnect);
                 }
