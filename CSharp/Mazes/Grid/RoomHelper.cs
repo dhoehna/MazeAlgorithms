@@ -58,7 +58,7 @@ namespace Grid
             }
         }
 
-        // retuns if the room is on any boundaries of the grid
+        // This method finds all of the boundaries that each room is on. For example if a room is on the northern wall then it will have a boundary to the north
         public static List<Direction> GetBoundriesRoomIsOn(Room room, int rows, int columns) 
         {
             List<Direction> edgeDirections = new List<Direction>();
