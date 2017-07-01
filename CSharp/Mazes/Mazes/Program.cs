@@ -9,13 +9,6 @@ using Grid;
 using static Grid.Grid;
 using DistanceAlgorithms;
 
-/*
- * TO-DO: Add I/O for choosing maze size, difficulty, and color.
- *  Make starting position more random.
- *  Add a marker for starting and end position.
- *  Make maze rooms more random according to difficulty.
- */
-
 namespace Mazes
 {
     class Program
@@ -29,28 +22,36 @@ namespace Mazes
         const int PEN_THICKNESS_IN_PIXLES = 3;
         static void Main(string[] args)
         {
+
             // Prompt the user to input the type of algorithm we will be using. 1 for Binary 2 for sidewinder
             System.Console.WriteLine("Please tell me what type of algorithm you want to use. (1 - Binary 2 - Sidewinder)");
-
-            // Get the type of algorithm we will be using from the user. (Add a check and a loop to ensure that the user inputs the correct type).
-            int algoType = Convert.ToInt32(System.Console.ReadLine());
+            int algoType;
 
             // Create the base grid
             IGrid grid = new Grid.Grid(ROWS, COLUMNS);
             // Determine and create the type of algorithm that will be used to generate the rooms
             IMazeAlgorithm currentAlgorithm;
-            switch (algoType)
+            do
             {
-                case 1: currentAlgorithm = new Binary();
+                // Get the type of algorithm that the user wants to use
+                algoType = Convert.ToInt32(System.Console.ReadLine());
+
+                switch (algoType)
+                {
+                    case 1:
+                        currentAlgorithm = new Binary();
                         break;
 
-                case 2: currentAlgorithm = new Sidewinder();
+                    case 2:
+                        currentAlgorithm = new Sidewinder();
                         break;
 
-                default: System.Console.WriteLine("What type of algorithm is this?");
-                    currentAlgorithm = null;
+                    default:
+                        System.Console.WriteLine("Can't find this algorithm. Please choose a valid one. (1 - Binary 2 - Sidewinder)");
+                        currentAlgorithm = null;
                         break;
-            }
+                }
+            } while (algoType > 2 || algoType < 1);
            
             // Create the distance tracker
             IDistanceAlgorithm solver = new Rectangular();
