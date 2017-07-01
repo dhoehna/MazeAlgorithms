@@ -29,15 +29,34 @@ namespace Mazes
         const int PEN_THICKNESS_IN_PIXLES = 3;
         static void Main(string[] args)
         {
+            // Prompt the user to input the type of algorithm we will be using. 1 for Binary 2 for sidewinder
+            System.Console.WriteLine("Please tell me what type of algorithm you want to use. (1 - Binary 2 - Sidewinder)");
+
+            // Get the type of algorithm we will be using from the user. (Add a check and a loop to ensure that the user inputs the correct type).
+            int algoType = Convert.ToInt32(System.Console.ReadLine());
+
             // Create the base grid
             IGrid grid = new Grid.Grid(ROWS, COLUMNS);
-            // Create the algorithm to generate the rooms
-            IMazeAlgorithm binaryAlgorithm = new Binary();
+            // Determine and create the type of algorithm that will be used to generate the rooms
+            IMazeAlgorithm currentAlgorithm;
+            switch (algoType)
+            {
+                case 1: currentAlgorithm = new Binary();
+                        break;
+
+                case 2: currentAlgorithm = new Sidewinder();
+                        break;
+
+                default: System.Console.WriteLine("What type of algorithm is this?");
+                    currentAlgorithm = null;
+                        break;
+            }
+           
             // Create the distance tracker
             IDistanceAlgorithm solver = new Rectangular();
 
             // Generate the maze
-            MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, binaryAlgorithm, solver);
+            MazeGenerator.Generator generator = new MazeGenerator.Generator(grid, currentAlgorithm, solver);
             // Apply the algorithm to the generated maze
             generator.ApplyAlgorithm(); 
             int maxDistance = generator.SolveMaze(new GridPosition(0, 0));

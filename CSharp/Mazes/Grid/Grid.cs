@@ -87,7 +87,6 @@ namespace Grid
             return roomsToReturn;
         }
 
-
         public Room this[int row, int column]
         {
             get
