@@ -9,15 +9,17 @@ namespace Grid
 {
     public sealed class Room
     {
-        public int row { get; private set; }
-        public int column { get; private set; }
-        public int distance { get; set; } 
-        public bool visited { get; set; }
+        public int row {get; private set;}
+        public int column {get; private set;}
+        public int distance {get; set;} 
+        public bool visited {get; set;}
 
-        // Keeps track of the neighbors of said room to create a linked list type structure
+        /// <summary>
+        /// Keeps track of the neighbors of said room for the Grid class and other classes that needs information on the neighbors
+        /// of a specific room.
+        /// </summary>
         private Dictionary<Direction, Room> neighbors; 
         
-        // Constructor
         public Room(int row, int column)
         {
             this.row = row;
@@ -30,8 +32,7 @@ namespace Grid
         {
             this.row = gridPosition.row;
             this.column = gridPosition.column;
-
-            // The direction of the room is the key.
+            
             neighbors = new Dictionary<Direction, Room>(); 
         }
 

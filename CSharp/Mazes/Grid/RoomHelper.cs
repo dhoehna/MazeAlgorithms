@@ -9,22 +9,22 @@ namespace Grid
 
         public static GridPosition GetNeighborLocation(Room room, Direction direction)
         {
-            // move up a row
+            // moves up a row
             if (direction == Direction.NORTH) 
             {
                 return new GridPosition(room.row - 1, room.column);
             }
-            // move back a row
+            // moves back a row
             else if (direction == Direction.SOUTH) 
             {
                 return new GridPosition(room.row + 1, room.column);
             }
-            // move back a column
+            // moves left a column
             else if (direction == Direction.EAST) 
             {
                 return new GridPosition(room.row, room.column + 1);
             }
-            // move up a column
+            // moves right a column
             else if (direction == Direction.WEST) 
             {
                 return new GridPosition(room.row, room.column - 1);
@@ -35,7 +35,7 @@ namespace Grid
                 throw new ArgumentException($"{direction} is not a valid direction."); 
             }
         }
-
+        
         public static void ConnectRooms(Room roomOne, Room roomTwo, Direction directionFromRoomOneToRoomTwo)
         {
             roomOne.Connect(roomTwo, directionFromRoomOneToRoomTwo);
@@ -58,7 +58,13 @@ namespace Grid
             }
         }
 
-        // This method finds all of the boundaries that each room is on. For example if a room is on the northern wall then it will have a boundary to the north
+        /// <summary>
+        /// This method finds all of the boundaries that each room is on. For example if a room is on the northern wall then it will have a boundary to the north.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
         public static List<Direction> GetBoundriesRoomIsOn(Room room, int rows, int columns) 
         {
             List<Direction> edgeDirections = new List<Direction>();

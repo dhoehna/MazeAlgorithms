@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using static Grid.Grid;
 using System.Linq;
 
-/*
- * The Algorithm used to generate information for the maze.
- */
-
 namespace MazeAlgorithms
 {
+    /// <summary>
+    /// The Algorithm used to generate information for the maze and is used by another class to generate the actual rooms.
+    /// </summary>
     public class Binary : IMazeAlgorithm
     {
 

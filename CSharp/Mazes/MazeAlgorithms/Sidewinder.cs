@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace MazeAlgorithms
 {
+    /// <summary>
+    /// The Algorithm used to generate information for the maze and is used by another class to generate the actual rooms.
+    /// </summary>
     public class Sidewinder : IMazeAlgorithm
     {
         private enum ValidConnectionDirections

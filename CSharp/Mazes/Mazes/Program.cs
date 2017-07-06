@@ -25,18 +25,18 @@ namespace Mazes
 
             // Prompt the user to input the type of algorithm we will be using. 1 for Binary 2 for sidewinder
             System.Console.WriteLine("Please tell me what type of algorithm you want to use. (1 - Binary 2 - Sidewinder)");
-            int algoType;
+            int algorithmType;
 
             // Create the base grid
             IGrid grid = new Grid.Grid(ROWS, COLUMNS);
             // Determine and create the type of algorithm that will be used to generate the rooms
-            IMazeAlgorithm currentAlgorithm;
+            IMazeAlgorithm currentAlgorithm = null;
             do
             {
                 // Get the type of algorithm that the user wants to use
-                algoType = Convert.ToInt32(System.Console.ReadLine());
+                algorithmType = Convert.ToInt32(System.Console.ReadLine());
 
-                switch (algoType)
+                switch (algorithmType)
                 {
                     case 1:
                         currentAlgorithm = new Binary();
@@ -48,10 +48,9 @@ namespace Mazes
 
                     default:
                         System.Console.WriteLine("Can't find this algorithm. Please choose a valid one. (1 - Binary 2 - Sidewinder)");
-                        currentAlgorithm = null;
                         break;
                 }
-            } while (algoType > 2 || algoType < 1);
+            } while (algorithmType > 2 || algorithmType < 1);
            
             // Create the distance tracker
             IDistanceAlgorithm solver = new Rectangular();

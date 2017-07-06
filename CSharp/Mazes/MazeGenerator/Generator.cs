@@ -17,11 +17,16 @@ namespace MazeGenerator
             this.solver = solver;
         }
 
-        // The algorithm that is used to create the rooms is applied here.
+        /// <summary>
+        /// The algorithm that is used to create the rooms is applied here.
+        /// </summary>
         public void ApplyAlgorithm()
         {
             algorithmToApply.TurnGridIntoMaze(gridToManipulate);
         }
+        /// <summary>
+        /// This method is used to apply a solution to the algorithm passed to this class.
+        /// </summary>
 
         public int SolveMaze(GridPosition startingCell)
         {
