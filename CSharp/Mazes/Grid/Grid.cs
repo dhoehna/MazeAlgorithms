@@ -6,6 +6,9 @@ namespace Grid
 {
     public sealed class Grid :  IGrid
     {
+        /// <summary>
+        /// The purpose of Grid is to create the maze by connecting and creating rooms.
+        /// </summary>
         public enum Direction
         {
             NORTH,
@@ -47,6 +50,11 @@ namespace Grid
             return columns;
         }
 
+        /// <summary>
+        /// This method is used to connect the rooms.
+        /// </summary>
+        /// <param name="room">The rooom to be connected</param>
+        /// <param name="directionToConect">The direction in which room will be connected to roomToConnectWith</param>
         public void Connect(Room room, Direction directionToConect)
         {
             Room roomToConnectWith = null;
@@ -77,7 +85,6 @@ namespace Grid
 
             return roomsToReturn;
         }
-
 
         public Room this[int row, int column]
         {
