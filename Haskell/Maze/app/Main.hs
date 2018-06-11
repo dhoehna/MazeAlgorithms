@@ -1,25 +1,20 @@
 module Main where
 
 import Lib
-
-
---grid
---cell
---neighbors NORTH, SOUTH, EAST, WEST
-
-data HasNorthNeighbor = HasNorthNeighbor
-data HasSouthNeighbor = HasSouthNeighbor
-data HasEastNeighbor = HasEastNeighbor
-data HasWestNeighbor = HasWestNeighbor
-
---Cell :: HasNorthNeighbor -> HasSouthNeighbor -> HasEastNeighbor -> HasWestNeighbor -> Cell
-data Cell = Cell HasNorthNeighbor HasSouthNeighbor HasEastNeighbor HasWestNeighbor
+  
+newtype HasNorthNeighbor = HasNorthNeighbor Bool
+newtype HasSouthNeighbor = HasSouthNeighbor Bool
+newtype HasEastNeighbor = HasEastNeighbor Bool
+newtype HasWestNeighbor = HasWestNeighbor Bool
+  
+data Cell = MakeCell
+   {
+       HasNorthNeighbor
+       ,HasSouthNeighbor
+       ,HasEastNeighbor
+       ,HasWestNeighbor
+   }
 
 
 main :: IO ()
 main = someFunc
-
-
-
-
-

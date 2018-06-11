@@ -243,3 +243,8 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+#Haskell
+.stack-work/
+Maze.cabal
+*~
