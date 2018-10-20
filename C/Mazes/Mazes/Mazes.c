@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 
 typedef struct
 {
@@ -7,37 +11,106 @@ typedef struct
 	int WEST : 1;
 } directions;
 
-struct cell
+enum direction
 {
-	struct cell* NorthNeighbor;
-	struct cell* SouthNeighbor;
-	struct cell* EastNeighbor;
-	struct cell* WestNeighbor;
-
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
 };
 
+struct Point
+{
+	unsigned int xPosition;
+	unsigned int yPosition;
+};
 
+/*
+A cell only has a neighbor if there is not a wall between the two rooms.
+*/
+struct Cell
+{
+	struct Cell* northNeighbor;
+	struct Cell* southNeighbor;
+	struct Cell* eastNeighbor;
+	struct Cell* westNeighbor;
+	struct Point cellPosition;
+};
+
+struct Maze
+{
+	unsigned int width;
+	unsigned int heigth;
+	struct Cell startingCell;
+};
+
+static unsigned int maxWidth;
+static unsigned int maxHeigth;
+
+void MakeMaze(struct Cell* currentCell);
+
+/*
+void MakeNeighbor(struct Cell* first, struct Cell* second, enum direction directionFromFirstToSecond);
+*/
 
 main()
 {
-	//DOn't really...Wel, I don't.
-	//Well, let's get started shall we?
-	//WHat do we need first?  Cells, the algorithm, holding the cells.
-	//But we don't have poly morphism.  THis will be fun.
-	//Like.  This feels werid, even though the syntax is similar.
-	//Let's start.
-	//I know hwo to think about programming in and OO language, but not C.
-	//Just start.
+	maxHeigth = 10;
+	maxWidth = 10;
 
-	//I need cells.
+	struct Point startingPoint;
+	startingPoint.xPosition = 0;
+	startingPoint.yPosition = 0;
 
-	//So a struct.
-/*
-	So, I have a cell.  What does a cell have?  0 - 3 walls.  Or, 1-4 exits.  Or neighbors.
-	4 directions.  NORTH, SOUTH, EAST, WEST.
-	I can use a bit flag for that.
+	struct Cell startingCell;
+	startingCell.cellPosition = startingPoint;
 
-	let's make it so a cell knows which neighbors it can reach.
-*/
+	struct Maze myMaze;
+	myMaze.heigth = maxHeigth;
+	myMaze.width = maxWidth;
+	myMaze.startingCell = startingCell;
+
+	srand(time(NULL));
+	MakeMaze(&myMaze.startingCell);
+
+	/*
+	Alright.  So.  Algorithm time.  I need to take the starting cell and figure out which direction to go.
+	Either north or east.  Here is an interesting thing.
+	I could just go cell to cel...Nooo. I can't.  I can't because this is a list.  I have to travel from one cell to another.
+
+	Okay.  So, start at the starting location, choose either north or east.
+
+	What I have now won't work with the binary algorithm.  I don't know.  Let's try it.
+	*/
 }
 
+void MakeMaze(struct Cell* currentCell)
+{
+	
+	struct Cell* nextCell = (struct Cell*) malloc(sizeof(struct Cell));
+	struct Point nextPoint;
+	nextCell->eastNeighbor = NULL;
+	nextCell->northNeighbor = NULL;
+	nextCell->southNeighbor = NULL;
+	nextCell->westNeighbor = NULL;
+	
+	//In the corner.
+	if (currentCell->cellPosition.xPosition == maxWidth && currentCell->cellPosition.yPosition == 0)
+	{
+		nextPoint.xPosition = currentCell->cellPosition.xPosition;
+		nextPoint.yPosition = (currentCell->cellPosition.yPosition) + 1;
+	}
+	else if (currentCell->cellPosition.yPosition == 0) // on the north wall
+	{
+
+	}
+	else if (currentCell->cellPosition.xPosition == maxWidth) // on the east wall
+	{
+
+	}
+	else
+	{
+
+	}
+
+}
