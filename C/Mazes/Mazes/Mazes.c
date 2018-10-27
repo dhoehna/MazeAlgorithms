@@ -34,7 +34,7 @@ struct Cell
 	struct Cell* southNeighbor;
 	struct Cell* eastNeighbor;
 	struct Cell* westNeighbor;
-	struct Point cellPosition;
+	struct Point* cellPosition;
 };
 
 struct Maze
@@ -58,9 +58,9 @@ main()
 	maxHeigth = 10;
 	maxWidth = 10;
 
-	struct Point startingPoint;
-	startingPoint.xPosition = 0;
-	startingPoint.yPosition = 0;
+	struct Point* startingPoint = (struct Point*) malloc(sizeof(struct Point));
+	startingPoint->xPosition = 0;
+	startingPoint->yPosition = 0;
 
 	struct Cell startingCell;
 	startingCell.cellPosition = startingPoint;
@@ -84,33 +84,76 @@ main()
 	*/
 }
 
+//east and south instead.
 void MakeMaze(struct Cell* currentCell)
 {
+
+	//Next thing is too make the end cases.  Most likely I'll add a bool to cells to see if it has been
+	//visited or not.
+	struct Point* nextPoint = (struct Point*) malloc(sizeof(struct Point));
+	nextPoint->xPosition = 0;
+	nextPoint->yPosition = 0;
+
+	enum direction directionOfNewNeighbor = 0;
 	
+	//Figure out direction of what direction to open the new wall.
+	//In the corner.
+	if (currentCell->cellPosition->xPosition == maxWidth && currentCell->cellPosition->yPosition == maxHeigth)
+	{
+		directionOfNewNeighbor = SOUTH;
+	}
+	else if (currentCell->cellPosition->yPosition == maxHeigth) // on the south wall
+	{
+		directionOfNewNeighbor = EAST;
+	}
+	else if (currentCell->cellPosition->xPosition == maxWidth) // on the east wall
+	{
+		directionOfNewNeighbor = SOUTH;
+	}
+	else
+	{
+		int r = rand() % 1;
+
+		if (r == 0) // open up south
+		{
+			directionOfNewNeighbor = SOUTH;
+		}
+		else // open east
+		{
+			directionOfNewNeighbor = EAST;
+		}
+	}
+
 	struct Cell* nextCell = (struct Cell*) malloc(sizeof(struct Cell));
-	struct Point nextPoint;
 	nextCell->eastNeighbor = NULL;
 	nextCell->northNeighbor = NULL;
 	nextCell->southNeighbor = NULL;
 	nextCell->westNeighbor = NULL;
-	
-	//In the corner.
-	if (currentCell->cellPosition.xPosition == maxWidth && currentCell->cellPosition.yPosition == 0)
-	{
-		nextPoint.xPosition = currentCell->cellPosition.xPosition;
-		nextPoint.yPosition = (currentCell->cellPosition.yPosition) + 1;
-	}
-	else if (currentCell->cellPosition.yPosition == 0) // on the north wall
-	{
 
-	}
-	else if (currentCell->cellPosition.xPosition == maxWidth) // on the east wall
-	{
 
+	//Assing point and neighbors.
+	if (SOUTH == directionOfNewNeighbor)
+	{
+		nextPoint->xPosition = currentCell->cellPosition->xPosition;
+		nextPoint->yPosition = currentCell->cellPosition->yPosition + 1;
+
+		nextCell->cellPosition = nextPoint;
+
+		currentCell->southNeighbor = nextCell;
+		nextCell->northNeighbor = currentCell;
 	}
 	else
 	{
+		nextPoint->xPosition = currentCell->cellPosition->xPosition + 1;
+		nextPoint->yPosition = currentCell->cellPosition->yPosition;
 
+		nextCell->cellPosition = nextPoint;
+
+		currentCell->eastNeighbor = nextCell;
+		nextCell->westNeighbor = currentCell;
 	}
+
+	MakeMaze(nextCell);
+
 
 }
