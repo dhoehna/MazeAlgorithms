@@ -16,7 +16,8 @@ enum direction
 	NORTH,
 	SOUTH,
 	EAST,
-	WEST
+	WEST,
+	NONE,
 };
 
 struct Point
@@ -35,6 +36,7 @@ struct Cell
 	struct Cell* eastNeighbor;
 	struct Cell* westNeighbor;
 	struct Point* cellPosition;
+	//int hasBeenVisited;
 };
 
 struct Maze
@@ -44,10 +46,16 @@ struct Maze
 	struct Cell startingCell;
 };
 
+static int** hasBeenVisited;
+
 static unsigned int maxWidth;
 static unsigned int maxHeigth;
 
 void MakeMaze(struct Cell* currentCell);
+enum direction GetNewNeighborDirection(struct Cell* currentCell);
+void MakeNewCellWithNeighbor(enum direction directionOfNeighbor, struct Cell* currentCell, struct Cell* emptyCell);
+int HasCellBeenVisited(struct Point* cellLocation);
+void MarkCallAsVisited(struct Point* cellLocation);
 
 /*
 void MakeNeighbor(struct Cell* first, struct Cell* second, enum direction directionFromFirstToSecond);
@@ -55,8 +63,23 @@ void MakeNeighbor(struct Cell* first, struct Cell* second, enum direction direct
 
 main()
 {
-	maxHeigth = 10;
-	maxWidth = 10;
+	maxHeigth = 5;
+	maxWidth = 5;
+
+	hasBeenVisited = (int **)malloc(maxHeigth * sizeof(int *));
+
+	for (int i = 0; i < maxHeigth; i++)
+	{
+		(int **)malloc(maxHeigth * sizeof(int *));
+	}
+
+	for (int currentRow = 0; currentRow < maxHeigth; currentRow++)
+	{
+		for (int currentColumn = 0; currentColumn < maxWidth; currentColumn++)
+		{
+			hasBeenVisited[currentRow][currentColumn] = 0;
+		}
+	}
 
 	struct Point* startingPoint = (struct Point*) malloc(sizeof(struct Point));
 	startingPoint->xPosition = 0;
@@ -64,6 +87,7 @@ main()
 
 	struct Cell startingCell;
 	startingCell.cellPosition = startingPoint;
+	MarkCallAsVisited(startingPoint);
 
 	struct Maze myMaze;
 	myMaze.heigth = maxHeigth;
@@ -87,32 +111,49 @@ main()
 //east and south instead.
 void MakeMaze(struct Cell* currentCell)
 {
+	if (HasCellBeenVisited(currentCell->cellPosition))
+	{
+		//Next thing is too make the end cases.  Most likely I'll add a bool to cells to see if it has been
+		//visited or not.
 
-	//Next thing is too make the end cases.  Most likely I'll add a bool to cells to see if it has been
-	//visited or not.
-	struct Point* nextPoint = (struct Point*) malloc(sizeof(struct Point));
-	nextPoint->xPosition = 0;
-	nextPoint->yPosition = 0;
 
+		enum direction directionOfNewNeighbor = GetNewNeighborDirection(currentCell);
+
+		struct Cell* nextCell = (struct Cell*) malloc(sizeof(struct Cell));
+
+		MakeNewCellWithNeighbor(directionOfNewNeighbor, currentCell, nextCell);
+		
+		MarkCallAsVisited(currentCell->cellPosition);
+		MakeMaze(nextCell);
+	}
+
+
+}
+
+enum direction GetNewNeighborDirection(struct Cell* currentCell)
+{
 	enum direction directionOfNewNeighbor = 0;
+
+
 	
+
 	//Figure out direction of what direction to open the new wall.
 	//In the corner.
 	if (currentCell->cellPosition->xPosition == maxWidth && currentCell->cellPosition->yPosition == maxHeigth)
 	{
 		directionOfNewNeighbor = SOUTH;
 	}
-	else if (currentCell->cellPosition->yPosition == maxHeigth) // on the south wall
+	else if ((currentCell->cellPosition->yPosition) + 1 == maxHeigth) // on the south wall
 	{
 		directionOfNewNeighbor = EAST;
 	}
-	else if (currentCell->cellPosition->xPosition == maxWidth) // on the east wall
+	else if ((currentCell->cellPosition->xPosition) + 1 == maxWidth) // on the east wall
 	{
 		directionOfNewNeighbor = SOUTH;
 	}
 	else
 	{
-		int r = rand() % 1;
+		int r = rand() % 2;
 
 		if (r == 0) // open up south
 		{
@@ -124,11 +165,19 @@ void MakeMaze(struct Cell* currentCell)
 		}
 	}
 
-	struct Cell* nextCell = (struct Cell*) malloc(sizeof(struct Cell));
-	nextCell->eastNeighbor = NULL;
-	nextCell->northNeighbor = NULL;
-	nextCell->southNeighbor = NULL;
-	nextCell->westNeighbor = NULL;
+	return directionOfNewNeighbor;
+}
+
+void MakeNewCellWithNeighbor(enum direction directionOfNewNeighbor, struct Cell* currentCell, struct Cell* emptyCell)
+{
+	emptyCell->eastNeighbor = NULL;
+	emptyCell->northNeighbor = NULL;
+	emptyCell->southNeighbor = NULL;
+	emptyCell->westNeighbor = NULL;
+
+	struct Point* nextPoint = (struct Point*) malloc(sizeof(struct Point));
+	nextPoint->xPosition = 0;
+	nextPoint->yPosition = 0;
 
 
 	//Assing point and neighbors.
@@ -137,23 +186,29 @@ void MakeMaze(struct Cell* currentCell)
 		nextPoint->xPosition = currentCell->cellPosition->xPosition;
 		nextPoint->yPosition = currentCell->cellPosition->yPosition + 1;
 
-		nextCell->cellPosition = nextPoint;
+		emptyCell->cellPosition = nextPoint;
 
-		currentCell->southNeighbor = nextCell;
-		nextCell->northNeighbor = currentCell;
+		currentCell->southNeighbor = emptyCell;
+		emptyCell->northNeighbor = currentCell;
 	}
 	else
 	{
 		nextPoint->xPosition = currentCell->cellPosition->xPosition + 1;
 		nextPoint->yPosition = currentCell->cellPosition->yPosition;
 
-		nextCell->cellPosition = nextPoint;
+		emptyCell->cellPosition = nextPoint;
 
-		currentCell->eastNeighbor = nextCell;
-		nextCell->westNeighbor = currentCell;
+		currentCell->eastNeighbor = emptyCell;
+		emptyCell->westNeighbor = currentCell;
 	}
+}
 
-	MakeMaze(nextCell);
+int HasCellBeenVisited(struct Point* cellLocation)
+{
+	return hasBeenVisited[cellLocation->xPosition][cellLocation->yPosition];
+}
 
-
+void MarkCallAsVisited(struct Point* cellLocation)
+{
+	hasBeenVisited[cellLocation->xPosition][cellLocation->yPosition] = 1;
 }
