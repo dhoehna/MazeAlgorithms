@@ -13,11 +13,11 @@ typedef struct
 
 enum direction
 {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST,
-	NONE,
+	NORTH = 1 << 0,
+	SOUTH = 1 << 1,
+	EAST = 1 << 2,
+	WEST = 1 << 3,
+	NONE
 };
 
 struct Point
@@ -70,7 +70,7 @@ main()
 
 	for (int i = 0; i < maxHeigth; i++)
 	{
-		(int **)malloc(maxHeigth * sizeof(int *));
+		hasBeenVisited[i] = (int *)malloc(maxWidth * sizeof(int));
 	}
 
 	for (int currentRow = 0; currentRow < maxHeigth; currentRow++)
@@ -87,7 +87,6 @@ main()
 
 	struct Cell startingCell;
 	startingCell.cellPosition = startingPoint;
-	MarkCallAsVisited(startingPoint);
 
 	struct Maze myMaze;
 	myMaze.heigth = maxHeigth;
@@ -111,59 +110,98 @@ main()
 //east and south instead.
 void MakeMaze(struct Cell* currentCell)
 {
-	if (HasCellBeenVisited(currentCell->cellPosition))
+	if (!HasCellBeenVisited(currentCell->cellPosition))
 	{
 		//Next thing is too make the end cases.  Most likely I'll add a bool to cells to see if it has been
 		//visited or not.
 
 
-		enum direction directionOfNewNeighbor = GetNewNeighborDirection(currentCell);
+		enum direction directionOfNewNeighbors = GetNewNeighborDirections(currentCell);
 
-		struct Cell* nextCell = (struct Cell*) malloc(sizeof(struct Cell));
+		if (directionOfNewNeighbors != NONE)
+		{
+			if (directionOfNewNeighbors == (EAST | SOUTH))
+			{
+				struct Cell* eastNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
 
-		MakeNewCellWithNeighbor(directionOfNewNeighbor, currentCell, nextCell);
-		
+				MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+				MakeMaze(eastNeighbor);
+
+				struct Cell* southNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
+
+				MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+				MakeMaze(southNeighbor);
+			}
+			else if (directionOfNewNeighbors == EAST)
+			{
+				struct Cell* eastNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
+
+				MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+				MakeMaze(eastNeighbor);
+			}
+			else if (directionOfNewNeighbors == SOUTH)
+			{
+				struct Cell* southNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
+
+				MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+				MakeMaze(southNeighbor);
+			}
+		}
+
 		MarkCallAsVisited(currentCell->cellPosition);
-		MakeMaze(nextCell);
 	}
 
 
 }
 
-enum direction GetNewNeighborDirection(struct Cell* currentCell)
+enum direction GetNewNeighborDirections(struct Cell* currentCell)
 {
 	enum direction directionOfNewNeighbor = 0;
 
 
-	
-
-	//Figure out direction of what direction to open the new wall.
-	//In the corner.
-	if (currentCell->cellPosition->xPosition == maxWidth && currentCell->cellPosition->yPosition == maxHeigth)
+	//figure out if we can go south
+	int onSouthWall = currentCell->cellPosition->yPosition == (maxHeigth - 1);
+	int hasSouthBeenVisited = 1;
+	if (!onSouthWall)
 	{
-		directionOfNewNeighbor = SOUTH;
+		struct Point southNeighbor;
+		southNeighbor.xPosition = currentCell->cellPosition->xPosition;
+		southNeighbor.yPosition = ((currentCell->cellPosition->yPosition) + 1);
+		hasSouthBeenVisited = HasCellBeenVisited(&southNeighbor);
 	}
-	else if ((currentCell->cellPosition->yPosition) + 1 == maxHeigth) // on the south wall
+
+	//Gifure out if we can go east.
+	int onEastWall = currentCell->cellPosition->xPosition == (maxWidth - 1);
+	int hasEastBeenVisited = 1;
+	if (!onEastWall)
+	{
+		struct Point eastNeighbor;
+		eastNeighbor.xPosition = ((currentCell->cellPosition->xPosition) + 1) ;
+		eastNeighbor.yPosition = currentCell->cellPosition->yPosition;
+		hasEastBeenVisited = HasCellBeenVisited(&eastNeighbor);
+	}
+
+	int canGoSouth = !(onSouthWall && hasSouthBeenVisited);
+	int canGoEast = !(onEastWall && hasEastBeenVisited);
+
+	if (canGoEast && canGoSouth)
+	{
+		directionOfNewNeighbor = EAST | SOUTH;
+	}
+	else if (canGoEast && !canGoSouth)
 	{
 		directionOfNewNeighbor = EAST;
 	}
-	else if ((currentCell->cellPosition->xPosition) + 1 == maxWidth) // on the east wall
+	else if (canGoSouth && !canGoEast)
 	{
 		directionOfNewNeighbor = SOUTH;
 	}
 	else
 	{
-		int r = rand() % 2;
-
-		if (r == 0) // open up south
-		{
-			directionOfNewNeighbor = SOUTH;
-		}
-		else // open east
-		{
-			directionOfNewNeighbor = EAST;
-		}
+		directionOfNewNeighbor = NONE;
 	}
+
+
 
 	return directionOfNewNeighbor;
 }

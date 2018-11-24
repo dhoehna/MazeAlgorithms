@@ -145,6 +145,10 @@
   <ItemGroup>
     <ClCompile Include="Mazes.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="null.h" />
+    <ClInclude Include="Queue.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
