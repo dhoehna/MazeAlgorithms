@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "Queue.h"
 
 
 typedef struct
@@ -36,6 +37,7 @@ struct Cell
 	struct Cell* eastNeighbor;
 	struct Cell* westNeighbor;
 	struct Point* cellPosition;
+	SIMPLEQ_ENTRY(Cell) entries;
 	//int hasBeenVisited;
 };
 
@@ -95,63 +97,51 @@ main()
 
 	srand(time(NULL));
 	MakeMaze(&myMaze.startingCell);
-
-	/*
-	Alright.  So.  Algorithm time.  I need to take the starting cell and figure out which direction to go.
-	Either north or east.  Here is an interesting thing.
-	I could just go cell to cel...Nooo. I can't.  I can't because this is a list.  I have to travel from one cell to another.
-
-	Okay.  So, start at the starting location, choose either north or east.
-
-	What I have now won't work with the binary algorithm.  I don't know.  Let's try it.
-	*/
 }
 
 //east and south instead.
 void MakeMaze(struct Cell* currentCell)
 {
-	if (!HasCellBeenVisited(currentCell->cellPosition))
+
+	SIMPLEQ_HEAD(cellQueue, Cell) head = SIMPLEQ_HEAD_INITIALIZER(head);
+	struct cellQueue *cellsToVisit;
+
+	SIMPLEQ_INSERT_HEAD(&head, currentCell, entries);
+
+	while (!SIMPLEQ_EMPTY(&head))
 	{
-		//Next thing is too make the end cases.  Most likely I'll add a bool to cells to see if it has been
-		//visited or not.
-
-
+		struct Cell* cellToLookAt = SIMPLEQ_FIRST(&head);
+		SIMPLEQ_REMOVE_HEAD(&head, entries);
 		enum direction directionOfNewNeighbors = GetNewNeighborDirections(currentCell);
 
 		if (directionOfNewNeighbors != NONE)
-		{
-			if (directionOfNewNeighbors == (EAST | SOUTH))
-			{
-				struct Cell* eastNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
+				{
+					if (directionOfNewNeighbors == (EAST | SOUTH))
+					{
+						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
+						MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
 
-				MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
-				MakeMaze(eastNeighbor);
+						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
+						MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
+					}
+					else if (directionOfNewNeighbors == EAST)
+					{
+						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
+						MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
+					}
+					else if (directionOfNewNeighbors == SOUTH)
+					{
+						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
+						MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
+					}
+				}
 
-				struct Cell* southNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
-
-				MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
-				MakeMaze(southNeighbor);
-			}
-			else if (directionOfNewNeighbors == EAST)
-			{
-				struct Cell* eastNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
-
-				MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
-				MakeMaze(eastNeighbor);
-			}
-			else if (directionOfNewNeighbors == SOUTH)
-			{
-				struct Cell* southNeighbor = (struct Cell*) malloc(sizeof(struct Cell));
-
-				MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
-				MakeMaze(southNeighbor);
-			}
-		}
-
-		MarkCallAsVisited(currentCell->cellPosition);
+				MarkCallAsVisited(currentCell->cellPosition);
 	}
-
-
 }
 
 enum direction GetNewNeighborDirections(struct Cell* currentCell)
