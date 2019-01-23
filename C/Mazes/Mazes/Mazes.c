@@ -48,7 +48,7 @@ struct Maze
 	struct Cell startingCell;
 };
 
-static int** hasBeenVisited;
+static int** hasBeenLinked;
 
 static unsigned int maxWidth;
 static unsigned int maxHeigth;
@@ -56,8 +56,8 @@ static unsigned int maxHeigth;
 void MakeMaze(struct Cell* currentCell);
 enum direction GetNewNeighborDirection(struct Cell* currentCell);
 void MakeNewCellWithNeighbor(enum direction directionOfNeighbor, struct Cell* currentCell, struct Cell* emptyCell);
-int HasCellBeenVisited(struct Point* cellLocation);
-void MarkCallAsVisited(struct Point* cellLocation);
+int HasCellBeenLinked(struct Point* cellLocation);
+void MarkCellAsLinked(struct Point* cellLocation);
 
 /*
 void MakeNeighbor(struct Cell* first, struct Cell* second, enum direction directionFromFirstToSecond);
@@ -68,18 +68,18 @@ main()
 	maxHeigth = 5;
 	maxWidth = 5;
 
-	hasBeenVisited = (int **)malloc(maxHeigth * sizeof(int *));
+	hasBeenLinked = (int **)malloc(maxHeigth * sizeof(int *));
 
 	for (int i = 0; i < maxHeigth; i++)
 	{
-		hasBeenVisited[i] = (int *)malloc(maxWidth * sizeof(int));
+		hasBeenLinked[i] = (int *)malloc(maxWidth * sizeof(int));
 	}
 
 	for (int currentRow = 0; currentRow < maxHeigth; currentRow++)
 	{
 		for (int currentColumn = 0; currentColumn < maxWidth; currentColumn++)
 		{
-			hasBeenVisited[currentRow][currentColumn] = 0;
+			hasBeenLinked[currentRow][currentColumn] = 0;
 		}
 	}
 
@@ -104,7 +104,6 @@ void MakeMaze(struct Cell* currentCell)
 {
 
 	SIMPLEQ_HEAD(cellQueue, Cell) head = SIMPLEQ_HEAD_INITIALIZER(head);
-	struct cellQueue *cellsToVisit;
 
 	SIMPLEQ_INSERT_HEAD(&head, currentCell, entries);
 
@@ -112,67 +111,68 @@ void MakeMaze(struct Cell* currentCell)
 	{
 		struct Cell* cellToLookAt = SIMPLEQ_FIRST(&head);
 		SIMPLEQ_REMOVE_HEAD(&head, entries);
-		enum direction directionOfNewNeighbors = GetNewNeighborDirections(currentCell);
+		enum direction directionOfNewNeighbors = GetNewNeighborDirections(cellToLookAt);
 
 		if (directionOfNewNeighbors != NONE)
 				{
 					if (directionOfNewNeighbors == (EAST | SOUTH))
 					{
 						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
-						MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+						MakeNewCellWithNeighbor(EAST, cellToLookAt, eastNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
+						MarkCellAsLinked(eastNeighbor->cellPosition);
 
 						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
-						MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
+						MarkCellAsLinked(southNeighbor->cellPosition);
 					}
 					else if (directionOfNewNeighbors == EAST)
 					{
 						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
-						MakeNewCellWithNeighbor(EAST, currentCell, eastNeighbor);
+						MakeNewCellWithNeighbor(EAST, cellToLookAt, eastNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
+						MarkCellAsLinked(eastNeighbor->cellPosition);
 					}
 					else if (directionOfNewNeighbors == SOUTH)
 					{
 						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
-						MakeNewCellWithNeighbor(SOUTH, currentCell, southNeighbor);
+						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
+						MarkCellAsLinked(southNeighbor->cellPosition);
 					}
 				}
-
-				MarkCallAsVisited(currentCell->cellPosition);
 	}
 }
 
 enum direction GetNewNeighborDirections(struct Cell* currentCell)
 {
-	enum direction directionOfNewNeighbor = 0;
-
-
 	//figure out if we can go south
 	int onSouthWall = currentCell->cellPosition->yPosition == (maxHeigth - 1);
-	int hasSouthBeenVisited = 1;
+	int hasSouthBeenLinked = 1;
 	if (!onSouthWall)
 	{
 		struct Point southNeighbor;
 		southNeighbor.xPosition = currentCell->cellPosition->xPosition;
 		southNeighbor.yPosition = ((currentCell->cellPosition->yPosition) + 1);
-		hasSouthBeenVisited = HasCellBeenVisited(&southNeighbor);
+		hasSouthBeenLinked = HasCellBeenLinked(&southNeighbor);
 	}
 
 	//Gifure out if we can go east.
 	int onEastWall = currentCell->cellPosition->xPosition == (maxWidth - 1);
-	int hasEastBeenVisited = 1;
+	int hasEastBeenLinked = 1;
 	if (!onEastWall)
 	{
 		struct Point eastNeighbor;
 		eastNeighbor.xPosition = ((currentCell->cellPosition->xPosition) + 1) ;
 		eastNeighbor.yPosition = currentCell->cellPosition->yPosition;
-		hasEastBeenVisited = HasCellBeenVisited(&eastNeighbor);
+		hasEastBeenLinked = HasCellBeenLinked(&eastNeighbor);
 	}
 
-	int canGoSouth = !(onSouthWall && hasSouthBeenVisited);
-	int canGoEast = !(onEastWall && hasEastBeenVisited);
+	int canGoSouth = !(onSouthWall || hasSouthBeenLinked);
+	int canGoEast = !(onEastWall || hasEastBeenLinked);
+
+	enum direction directionOfNewNeighbor = NONE;
 
 	if (canGoEast && canGoSouth)
 	{
@@ -231,12 +231,12 @@ void MakeNewCellWithNeighbor(enum direction directionOfNewNeighbor, struct Cell*
 	}
 }
 
-int HasCellBeenVisited(struct Point* cellLocation)
+int HasCellBeenLinked(struct Point* cellLocation)
 {
-	return hasBeenVisited[cellLocation->xPosition][cellLocation->yPosition];
+	return hasBeenLinked[cellLocation->xPosition][cellLocation->yPosition];
 }
 
-void MarkCallAsVisited(struct Point* cellLocation)
+void MarkCellAsLinked(struct Point* cellLocation)
 {
-	hasBeenVisited[cellLocation->xPosition][cellLocation->yPosition] = 1;
+	hasBeenLinked[cellLocation->xPosition][cellLocation->yPosition] = 1;
 }
