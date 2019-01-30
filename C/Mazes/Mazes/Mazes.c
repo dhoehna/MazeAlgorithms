@@ -99,6 +99,7 @@ main()
 	myMaze.startingCell = startingCell;
 
 
+	
 	srand(time(NULL));
 	MakeMaze(&myMaze.startingCell);
 }
@@ -119,7 +120,7 @@ void MakeMaze(struct Cell* currentCell)
 
 		if (directionOfNewNeighbors != NONE)
 				{
-					if (directionOfNewNeighbors == (EAST | SOUTH))
+					if (directionOfNewNeighbors == (EAST | NORTH))
 					{
 						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
 						eastNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
@@ -127,11 +128,11 @@ void MakeMaze(struct Cell* currentCell)
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
 						MarkCellAsLinked(eastNeighbor->cellPosition);
 
-						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
-						southNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
-						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
-						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
-						MarkCellAsLinked(southNeighbor->cellPosition);
+						struct Cell* northNeighbor = malloc(sizeof(struct Cell));
+						northNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
+						MakeNewCellWithNeighbor(NORTH, cellToLookAt, northNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, northNeighbor, entries);
+						MarkCellAsLinked(northNeighbor->cellPosition);
 					}
 					else if (directionOfNewNeighbors == EAST)
 					{
@@ -141,13 +142,13 @@ void MakeMaze(struct Cell* currentCell)
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
 						MarkCellAsLinked(eastNeighbor->cellPosition);
 					}
-					else if (directionOfNewNeighbors == SOUTH)
+					else if (directionOfNewNeighbors == NORTH)
 					{
-						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
-						southNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
-						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
-						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
-						MarkCellAsLinked(southNeighbor->cellPosition);
+						struct Cell* northNeighbor = malloc(sizeof(struct Cell));
+						northNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
+						MakeNewCellWithNeighbor(NORTH, cellToLookAt, northNeighbor);
+						SIMPLEQ_INSERT_TAIL(&head, northNeighbor, entries);
+						MarkCellAsLinked(northNeighbor->cellPosition);
 					}
 				}
 	}
@@ -156,14 +157,14 @@ void MakeMaze(struct Cell* currentCell)
 enum direction GetNewNeighborDirections(struct Cell* currentCell)
 {
 	//figure out if we can go south
-	int onSouthWall = currentCell->cellPosition->yPosition == (maxHeigth - 1);
-	int hasSouthBeenLinked = 1;
-	if (!onSouthWall)
+	int onNorthWall = currentCell->cellPosition->yPosition == 0;
+	int hasNorthhBeenLinked = 1;
+	if (!onNorthWall)
 	{
-		struct Point southNeighbor;
-		southNeighbor.xPosition = currentCell->cellPosition->xPosition;
-		southNeighbor.yPosition = ((currentCell->cellPosition->yPosition) + 1);
-		hasSouthBeenLinked = HasCellBeenLinked(&southNeighbor);
+		struct Point northNeighbor;
+		northNeighbor.xPosition = currentCell->cellPosition->xPosition;
+		northNeighbor.yPosition = ((currentCell->cellPosition->yPosition) - 1);
+		hasNorthhBeenLinked = HasCellBeenLinked(&northNeighbor);
 	}
 
 	//Gifure out if we can go east.
@@ -177,22 +178,22 @@ enum direction GetNewNeighborDirections(struct Cell* currentCell)
 		hasEastBeenLinked = HasCellBeenLinked(&eastNeighbor);
 	}
 
-	int canGoSouth = !(onSouthWall || hasSouthBeenLinked);
+	int canGoNorth = !(onNorthWall || hasNorthhBeenLinked);
 	int canGoEast = !(onEastWall || hasEastBeenLinked);
 
 	enum direction directionOfNewNeighbor = NONE;
 
-	if (canGoEast && canGoSouth)
+	if (canGoEast && canGoNorth)
 	{
-		directionOfNewNeighbor = EAST | SOUTH;
+		directionOfNewNeighbor = EAST | NORTH;
 	}
-	else if (canGoEast && !canGoSouth)
+	else if (canGoEast && !canGoNorth)
 	{
 		directionOfNewNeighbor = EAST;
 	}
-	else if (canGoSouth && !canGoEast)
+	else if (canGoNorth && !canGoEast)
 	{
-		directionOfNewNeighbor = SOUTH;
+		directionOfNewNeighbor = NORTH;
 	}
 	else
 	{
