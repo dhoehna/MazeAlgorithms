@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Queue.h"
+#include "png.h"
 
 
 typedef struct
@@ -38,6 +39,7 @@ struct Cell
 	struct Cell* westNeighbor;
 	struct Point* cellPosition;
 	SIMPLEQ_ENTRY(Cell) entries;
+	int spacesAwayFromStartingCell;
 	//int hasBeenVisited;
 };
 
@@ -89,11 +91,13 @@ main()
 
 	struct Cell startingCell;
 	startingCell.cellPosition = startingPoint;
+	startingCell.spacesAwayFromStartingCell = 0;
 
 	struct Maze myMaze;
 	myMaze.heigth = maxHeigth;
 	myMaze.width = maxWidth;
 	myMaze.startingCell = startingCell;
+
 
 	srand(time(NULL));
 	MakeMaze(&myMaze.startingCell);
@@ -118,11 +122,13 @@ void MakeMaze(struct Cell* currentCell)
 					if (directionOfNewNeighbors == (EAST | SOUTH))
 					{
 						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
+						eastNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
 						MakeNewCellWithNeighbor(EAST, cellToLookAt, eastNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
 						MarkCellAsLinked(eastNeighbor->cellPosition);
 
 						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
+						southNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
 						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
 						MarkCellAsLinked(southNeighbor->cellPosition);
@@ -130,6 +136,7 @@ void MakeMaze(struct Cell* currentCell)
 					else if (directionOfNewNeighbors == EAST)
 					{
 						struct Cell* eastNeighbor = malloc(sizeof(struct Cell));
+						eastNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
 						MakeNewCellWithNeighbor(EAST, cellToLookAt, eastNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, eastNeighbor, entries);
 						MarkCellAsLinked(eastNeighbor->cellPosition);
@@ -137,6 +144,7 @@ void MakeMaze(struct Cell* currentCell)
 					else if (directionOfNewNeighbors == SOUTH)
 					{
 						struct Cell* southNeighbor = malloc(sizeof(struct Cell));
+						southNeighbor->spacesAwayFromStartingCell = cellToLookAt->spacesAwayFromStartingCell + 1;
 						MakeNewCellWithNeighbor(SOUTH, cellToLookAt, southNeighbor);
 						SIMPLEQ_INSERT_TAIL(&head, southNeighbor, entries);
 						MarkCellAsLinked(southNeighbor->cellPosition);
