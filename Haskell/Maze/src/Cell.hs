@@ -1,6 +1,6 @@
 module Cell where
 
-data Cell = Cell Bool Bool Bool Bool Int Int    
+data Cell = Cell Bool Bool Bool Bool Int Int   
 
 cellConstructor :: Bool -> Bool -> Bool -> Bool -> Int -> Int -> Cell
 cellConstructor hasNorthNeighbor hasSouthNeighbor hasEastNeighbor hasWestNeighbor row column =  Cell hasNorthNeighbor hasSouthNeighbor hasEastNeighbor hasWestNeighbor row column
