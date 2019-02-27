@@ -1,8 +1,9 @@
-#include <stdio.h>
+#include "stdio.h"
 #include <stdlib.h>
 #include <time.h>
 #include "Queue.h"
-#include "png.h"
+#include "libheaders\png.h"
+
 
 
 typedef struct
@@ -98,8 +99,10 @@ main()
 	myMaze.width = maxWidth;
 	myMaze.startingCell = startingCell;
 
+	/*Example from http://zarb.org/~gc/html/libpng.html */
 
-	
+	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
 	srand(time(NULL));
 	MakeMaze(&myMaze.startingCell);
 }
