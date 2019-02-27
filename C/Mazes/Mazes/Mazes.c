@@ -55,12 +55,15 @@ static int** hasBeenLinked;
 
 static unsigned int maxWidth;
 static unsigned int maxHeigth;
+static unsigned int cellHeigthInPixles;
+static unsigned int cellWidthInPixles;
 
 void MakeMaze(struct Cell* currentCell);
 enum direction GetNewNeighborDirection(struct Cell* currentCell);
 void MakeNewCellWithNeighbor(enum direction directionOfNeighbor, struct Cell* currentCell, struct Cell* emptyCell);
 int HasCellBeenLinked(struct Point* cellLocation);
 void MarkCellAsLinked(struct Point* cellLocation);
+void write_row_callback(png_structp png_ptr, png_uint_32 row, int pass);
 
 /*
 void MakeNeighbor(struct Cell* first, struct Cell* second, enum direction directionFromFirstToSecond);
@@ -70,6 +73,8 @@ main()
 {
 	maxHeigth = 5;
 	maxWidth = 5;
+	cellHeigthInPixles = 30;
+	cellWidthInPixles = 30;
 
 	hasBeenLinked = (int **)malloc(maxHeigth * sizeof(int *));
 
@@ -101,10 +106,61 @@ main()
 
 	/*Example from http://zarb.org/~gc/html/libpng.html */
 
-	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	png_structp pngFile = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+	if (!pngFile)
+	{
+		printf("Could not create the write struct");
+		return;
+	}
+
+	png_infop pngInfo = png_create_info_struct(pngFile);
+
+	if (!pngInfo)
+	{
+		printf("Can't make the png info");
+		png_destroy_write_struct(&pngFile, NULL, NULL);
+		return;
+	}
+
+	FILE *pngFilePointer = fopen("maze.png", "wb");
+
+	if (!pngFilePointer)
+	{
+		printf("Could not open maze.png");
+		return;
+	}
+
+	png_init_io(pngFile, pngFilePointer);
+
+	if (setjmp(png_jmpbuf(pngFile)))
+	{
+		png_destroy_write_struct(&pngFile, &pngInfo);
+		fclose(pngFilePointer);
+		return;
+	}
+
+	int heightinPixles = cellHeigthInPixles * maxHeigth;
+	int widthInPixles = cellWidthInPixles * maxWidth;
+	int bitDepth = 16;
+	int colorType = PNG_COLOR_TYPE_GRAY;
+	int interlaceType = PNG_INTERLACE_NONE;
+	int compressionType = PNG_COMPRESSION_TYPE_DEFAULT;
+	int filterMethod = PNG_FILTER_TYPE_DEFAULT;
+
+	png_set_write_status_fn(pngFile, write_row_callback);
+
+
+	//setjmp(png_jmpbuf(pngFile));
+	//png_init_io(pngFile, fp);
 
 	srand(time(NULL));
 	MakeMaze(&myMaze.startingCell);
+}
+
+void write_row_callback(png_structp png_ptr, png_uint_32 row, int pass)
+{
+	//empty cause I don't want to do anything
 }
 
 //east and south instead.
