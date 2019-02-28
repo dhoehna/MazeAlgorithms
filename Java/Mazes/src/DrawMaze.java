@@ -176,9 +176,18 @@ public class DrawMaze extends JPanel {
         return walls;
     }
 
+    /**
+     * This algorithm is based on a Point(x,y) system for determining Cell locations and layout.
+     * It randomly chooses points from a bag of "setPoints" which already have been connected to another point.
+     * It then chooses from a loose point nearby from points stored in an array and randomly draws walls
+     * based on directional availability of that point. With the current structure, this maze generator
+     * makes basic mazes whereas the solution is typically a diagonal line from the starting point in the
+     * upper right to the finish in the lower right. More tweaking is needed in this algorithm to
+     * create a more challenging maze layout.
+     */
     void maze1() {
-        ArrayList<Point> source = new ArrayList<>();
-        ArrayList<Point> loose = new ArrayList<>();
+        ArrayList<Point> setPoints = new ArrayList<>();
+        ArrayList<Point> loosePoints = new ArrayList<>();
 
         // Run a loop to fill the array with source points
         int counterY = 0;
@@ -186,11 +195,11 @@ public class DrawMaze extends JPanel {
             // Add the points that make up the upper and lower walls
             if (counterY == 0 || counterY == mazeHeight) {
                 for (int i = 0; i <= mazeWidth; i++) {
-                    source.add(new Point(i, counterY));
+                    setPoints.add(new Point(i, counterY));
                 }
             } else { // Fills in the points along the edges
-                source.add(new Point(0, counterY));
-                source.add(new Point(mazeWidth, counterY));
+                setPoints.add(new Point(0, counterY));
+                setPoints.add(new Point(mazeWidth, counterY));
             }
             counterY++;
         }
@@ -199,7 +208,7 @@ public class DrawMaze extends JPanel {
         counterY = 1;
         while (counterY < mazeHeight) {
             for (int x = 1; x < mazeWidth; x++) {
-                loose.add(new Point(x, counterY));
+                loosePoints.add(new Point(x, counterY));
             }
             counterY++;
         }
@@ -207,17 +216,18 @@ public class DrawMaze extends JPanel {
         // ------------------ START MAZE GENERATION ------------------------//
 
         // Loop through the maze and add walls until the loose points are all gone
-        while (loose.size() > 0) {
-            Random rand = new Random();
+        Random rand = new Random();
 
-            // Pick a random source point to draw a wall from
-            Point sourcePoint = source.get(rand.nextInt(source.size()));
+        while (loosePoints.size() > 0) {
+
+            // Pick a random set point to draw a wall from
+            Point currentPoint = setPoints.get(rand.nextInt(setPoints.size()));
 
             // Create 4 "check" points to compare to the current source point
-            Point checkUp = new Point((int) (sourcePoint.getX()), (int) sourcePoint.getY() - 1);
-            Point checkDown = new Point((int) (sourcePoint.getX()), (int) sourcePoint.getY() + 1);
-            Point checkLeft = new Point((int) (sourcePoint.getX() - 1), (int) sourcePoint.getY());
-            Point checkRight = new Point((int) (sourcePoint.getX() + 1), (int) sourcePoint.getY());
+            Point checkUp = new Point((int) (currentPoint.getX()), (int) currentPoint.getY() - 1);
+            Point checkDown = new Point((int) (currentPoint.getX()), (int) currentPoint.getY() + 1);
+            Point checkLeft = new Point((int) (currentPoint.getX() - 1), (int) currentPoint.getY());
+            Point checkRight = new Point((int) (currentPoint.getX() + 1), (int) currentPoint.getY());
 
             // Argument to determine whether to remove the source point
             boolean removePoint = false;
@@ -232,23 +242,23 @@ public class DrawMaze extends JPanel {
             For every point in the loose array, if the checked point matches a value in the array,
             add that direction to the direction array
              */
-            for (Point p : loose) {
-                if (p.equals(checkUp)) {
+            for (Point point : loosePoints) {
+                if (point.equals(checkUp)) {
                     availableDirection.add(1);
-                } else if (p.equals(checkDown)) {
+                } else if (point.equals(checkDown)) {
                     availableDirection.add(2);
-                } else if (p.equals(checkLeft)) {
+                } else if (point.equals(checkLeft)) {
                     availableDirection.add(3);
-                } else if (p.equals(checkRight)) {
+                } else if (point.equals(checkRight)) {
                     availableDirection.add(4);
                 }
             }
 
-            // If there is no adjacent loose point, remove the point from the source list
+            // If there is no adjacent loose point, remove the point from the set list
             if (availableDirection.size() == 0) {
                 removePoint = true;
             } else if (availableDirection.size() == 1) { // If there is only 1 direction to travel,
-                // add a wall in that direction and remove the source point from the source array
+                // add a wall in that direction and remove the set point from the source array
                 removePoint = true;
                 direction = availableDirection.get(0);
             } else {
@@ -257,27 +267,28 @@ public class DrawMaze extends JPanel {
             }
 
             // Based on the chosen direction, draw a wall
+            //TODO: Create method to clean up the repeated code here
             if (direction == 1) { // DRAW UP
-                this.addVerticalWall((int) sourcePoint.getX(), (int) sourcePoint.getY() - 1, 1);
-                loose.remove(checkUp);
-                source.add(checkUp);
+                this.addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY() - 1, 1);
+                loosePoints.remove(checkUp);
+                setPoints.add(checkUp);
             } else if (direction == 2) {  // DRAW DOWN
-                this.addVerticalWall((int) sourcePoint.getX(), (int) sourcePoint.getY(), 1);
-                loose.remove(checkDown);
-                source.add(checkDown);
+                this.addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY(), 1);
+                loosePoints.remove(checkDown);
+                setPoints.add(checkDown);
             } else if (direction == 3) {  // DRAW LEFT
-                this.addHorizontalWall((int) sourcePoint.getX() - 1, (int) sourcePoint.getY(), 1);
-                loose.remove(checkLeft);
-                source.add(checkLeft);
+                this.addHorizontalWall((int) currentPoint.getX() - 1, (int) currentPoint.getY(), 1);
+                loosePoints.remove(checkLeft);
+                setPoints.add(checkLeft);
             } else if (direction == 4) { //DRAW RIGHT
-                this.addHorizontalWall((int) sourcePoint.getX(), (int) sourcePoint.getY(), 1);
-                loose.remove(checkRight);
-                source.add(checkRight);
+                this.addHorizontalWall((int) currentPoint.getX(), (int) currentPoint.getY(), 1);
+                loosePoints.remove(checkRight);
+                setPoints.add(checkRight);
             }
 
             // If the source point has 0 or 1 adjacent points, remove it from the array
             if (removePoint) {
-                source.remove(sourcePoint);
+                setPoints.remove(currentPoint);
             }
         }
         display();
