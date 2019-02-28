@@ -2,67 +2,83 @@ import java.util.ArrayList;
 
 class Cell {
 
-    private boolean visited;
-    private final int x;
-    private final int y;
+    private final int xCoor;
+    private final int yCoor;
     private final ArrayList<Integer> availableDirections = new ArrayList<>();
+    private boolean visited;
 
     /**
      * Default Constructor
-     * @param x The left/right coordinate
-     * @param y The up/down coordinate
+     *
+     * @param xCoor The left/right coordinate
+     * @param yCoor The up/down coordinate
      */
-    Cell(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Cell(int xCoor, int yCoor) {
+        this.xCoor = xCoor;
+        this.yCoor = yCoor;
     }
 
     boolean isVisited() {
         return !visited;
     }
 
-    int getX() {
-        return x;
-    }
-
-    int getY() {
-        return y;
-    }
-
     void setVisited() {
         this.visited = true;
     }
 
+    int getxCoor() {
+        return xCoor;
+    }
+
+    int getyCoor() {
+        return yCoor;
+    }
+
+
+
     /**
      * Checks that the number of available moves is greater than 0
-     * @return True is available directions is greater than 0
+     *
+     * @return True is available populateAvailableDirections is greater than 0
      */
     boolean hasAvailableMoves() {
         return availableDirections.size() > 0;
     }
 
     /**
-     * Checks the cell for available directions. If the Cell is along the border, it removes the
-     * edge as an available space
+     * Checks the cell for available populateAvailableDirections. If the Cell is along the border, it removes the edge as an available
+     * space
+     *
      * @param height The height of the grid
-     * @param width The width of the grid
+     * @param width  The width of the grid
      */
-    void directions(int height, int width) {
+    void populateAvailableDirections(int height, int width) {
         // Check upward movement
-        if(y - 1 >= 0) {
+        if (yCoor - 1 >= 0) {
             availableDirections.add(1);
         }
         // Check downward movement
-        if(y + 1 < height) {
+        if (yCoor + 1 < height) {
             availableDirections.add(2);
         }
         // Check left side
-        if(x - 1 >= 0) {
+        if (xCoor - 1 >= 0) {
             availableDirections.add(3);
         }
         // Check right side
-        if(x + 1 < width) {
+        if (xCoor + 1 < width) {
             availableDirections.add(4);
+        }
+    }
+
+    /**
+     * Removes the given direction from the availableDirections array when it exists within the array
+     *
+     * @param direction The direction to remove
+     */
+    void removeDirection(int direction) {
+        if (availableDirections.contains(direction)) {
+            availableDirections.remove(availableDirections.indexOf(direction));
         }
     }
 
