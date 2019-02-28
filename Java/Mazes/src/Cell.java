@@ -39,15 +39,15 @@ class Cell {
     /**
      * Checks that the number of available moves is greater than 0
      *
-     * @return True is available populateAvailableDirections is greater than 0
+     * @return True if available direction moves is greater than 0
      */
     boolean hasAvailableMoves() {
         return availableDirections.size() > 0;
     }
 
     /**
-     * Checks the cell for available populateAvailableDirections. If the Cell is along the border, it removes the edge as an available
-     * space
+     * Checks the cell for available directions to move to next cell. If the Cell is along the border, it removes the
+     * edge as an available space
      *
      * @param height The height of the grid
      * @param width  The width of the grid
