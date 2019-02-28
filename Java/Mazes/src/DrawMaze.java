@@ -60,23 +60,23 @@ public class DrawMaze extends JPanel {
         DrawMaze myMaze = new DrawMaze(75, 60);
         DrawMaze myMaze1 = new DrawMaze(75, 60);
 
-        // myMaze.maze1();
+        myMaze.maze1();
         myMaze1.maze2();
     }
 
     /**
      * Add a vertical wall to the maze
      *
-     * @param x   The horizontal offset for the wall
-     * @param y   The vertical offset for the wall
-     * @param len The length of the wall
+     * @param xOffset   The horizontal offset for the wall
+     * @param yOffset   The vertical offset for the wall
+     * @param length The length of the wall
      * @return true, if the requested wall added to the set of walls
      */
-    private boolean addVerticalWall(int x, int y, int len) {
-        if (x > mazeWidth || y + len > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
+    private boolean addVerticalWall(int xOffset, int yOffset, int length) {
+        if (xOffset > mazeWidth || yOffset + length > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
         boolean added = false;
-        for (int i = 0; i < len; i++) {
-            if (addVerticalWall(x, y + i)) added = true;
+        for (int i = 0; i < length; i++) {
+            if (addVerticalWall(xOffset, yOffset + i)) added = true;
         }
         return added;
     }
@@ -84,27 +84,27 @@ public class DrawMaze extends JPanel {
     /**
      * Add a vertical wall one cell long to the maze
      *
-     * @param x The horizontal offset for the wall
-     * @param y = The vertical offset for the wall
+     * @param xOffset The horizontal offset for the wall
+     * @param yOffset = The vertical offset for the wall
      * @return true, if the requested wall added to the set of walls
      */
-    private boolean addVerticalWall(int x, int y) {
-        if (x > mazeWidth || y + 1 > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
-        return walls.add(new Wall(x, y, false));
+    private boolean addVerticalWall(int xOffset, int yOffset) {
+        if (xOffset > mazeWidth || yOffset + 1 > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
+        return walls.add(new Wall(xOffset, yOffset, false));
     }
 
     /**
      * Add a horizontal wall to the maze
      *
-     * @param x The horizontal offset for the wall
-     * @param y = The vertical offset for the wall
+     * @param xOffset The horizontal offset for the wall
+     * @param yOffset = The vertical offset for the wall
      * @return true, if the requested wall added to the set of walls
      */
-    private boolean addHorizontalWall(int x, int y, int len) {
-        if (x + len > mazeWidth || y > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
+    private boolean addHorizontalWall(int xOffset, int yOffset, int length) {
+        if (xOffset + length > mazeWidth || yOffset > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
         boolean added = false;
-        for (int i = 0; i < len; i++) {
-            if (addHorizontalWall(x + i, y)) added = true;
+        for (int i = 0; i < length; i++) {
+            if (addHorizontalWall(xOffset + i, yOffset)) added = true;
         }
         return added;
     }
@@ -112,14 +112,14 @@ public class DrawMaze extends JPanel {
     /**
      * Add a horizontal wall one cell long to the maze.
      *
-     * @param x The horizontal offset for the wall
-     * @param y The vertical offset for the wall
+     * @param xOffset The horizontal offset for the wall
+     * @param yOffset The vertical offset for the wall
      * @return True, if the requested wall added to the set of walls
      */
-    private boolean addHorizontalWall(int x, int y) {
-        if (x + 1 > mazeWidth || y > mazeHeight)
+    private boolean addHorizontalWall(int xOffset, int yOffset) {
+        if (xOffset + 1 > mazeWidth || yOffset > mazeHeight)
             throw new IllegalArgumentException("Wall exceeds maze boundary");
-        return walls.add(new Wall(x, y, true));
+        return walls.add(new Wall(xOffset, yOffset, true));
     }
 
     /**
