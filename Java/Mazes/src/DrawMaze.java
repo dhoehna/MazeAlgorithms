@@ -129,9 +129,11 @@ public class DrawMaze extends JPanel {
         int x = wall.xCoor;
         int y = wall.yCoor;
         if (wall.horz) {
-            g.drawLine(BORDER + x * SIZE, BORDER + y * SIZE, BORDER + (x + 1) * SIZE, BORDER + y * SIZE);
+            g.drawLine(BORDER + (x * SIZE), BORDER + (y * SIZE), BORDER + (x + 1) * SIZE,
+                    BORDER + (y * SIZE));
         } else {
-            g.drawLine(BORDER + x * SIZE, BORDER + y * SIZE, BORDER + x * SIZE, BORDER + (y + 1) * SIZE);
+            g.drawLine(BORDER + (x * SIZE), BORDER + (y * SIZE), BORDER + (x * SIZE),
+                    BORDER + (y + 1) * SIZE);
         }
     }
 
@@ -141,7 +143,7 @@ public class DrawMaze extends JPanel {
      * It then chooses from a "loose point" adjacent to the current point from points stored in an array and randomly
      * draws walls based on directional availability of that point. With the current structure, this maze generator
      * makes basic mazes whereas the solution is typically a diagonal line from the starting point in the
-     * upper right to the finish in the lower right. More tweaking is needed in this algorithm to
+     * upper left to the finish in the lower right. More tweaking is needed in this algorithm to
      * create a more challenging maze layout.
      */
     private void maze1() {
