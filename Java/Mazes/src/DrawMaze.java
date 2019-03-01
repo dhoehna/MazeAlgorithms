@@ -46,8 +46,8 @@ public class DrawMaze extends JPanel {
     private DrawMaze(int width, int height) {
         mazeWidth = width;
         mazeHeight = height;
-        setPreferredSize(new Dimension(width * SIZE + 2 * BORDER + WALL,
-                height * SIZE + 2 * BORDER + WALL));
+        setPreferredSize(new Dimension((width * SIZE) + (2 * BORDER) + WALL,
+                (height * SIZE) + (2 * BORDER) + WALL));
         walls = new HashSet<>();
     }
 
@@ -65,48 +65,16 @@ public class DrawMaze extends JPanel {
     }
 
     /**
-     * Add a vertical wall to the maze
-     *
-     * @param xOffset   The horizontal offset for the wall
-     * @param yOffset   The vertical offset for the wall
-     * @param length The length of the wall
-     * @return true, if the requested wall added to the set of walls
-     */
-    private boolean addVerticalWall(int xOffset, int yOffset, int length) {
-        if (xOffset > mazeWidth || yOffset + length > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
-        boolean added = false;
-        for (int i = 0; i < length; i++) {
-            if (addVerticalWall(xOffset, yOffset + i)) added = true;
-        }
-        return added;
-    }
-
-    /**
      * Add a vertical wall one cell long to the maze
      *
      * @param xOffset The horizontal offset for the wall
      * @param yOffset = The vertical offset for the wall
-     * @return true, if the requested wall added to the set of walls
      */
-    private boolean addVerticalWall(int xOffset, int yOffset) {
-        if (xOffset > mazeWidth || yOffset + 1 > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
-        return walls.add(new Wall(xOffset, yOffset, false));
-    }
-
-    /**
-     * Add a horizontal wall to the maze
-     *
-     * @param xOffset The horizontal offset for the wall
-     * @param yOffset = The vertical offset for the wall
-     * @return true, if the requested wall added to the set of walls
-     */
-    private boolean addHorizontalWall(int xOffset, int yOffset, int length) {
-        if (xOffset + length > mazeWidth || yOffset > mazeHeight) throw new IllegalArgumentException("Wall exceeds maze boundary");
-        boolean added = false;
-        for (int i = 0; i < length; i++) {
-            if (addHorizontalWall(xOffset + i, yOffset)) added = true;
+    private void addVerticalWall(int xOffset, int yOffset) {
+        if (xOffset > mazeWidth || yOffset + 1 > mazeHeight) {
+            throw new IllegalArgumentException("Wall exceeds maze boundary");
         }
-        return added;
+        walls.add(new Wall(xOffset, yOffset, false));
     }
 
     /**
@@ -114,12 +82,12 @@ public class DrawMaze extends JPanel {
      *
      * @param xOffset The horizontal offset for the wall
      * @param yOffset The vertical offset for the wall
-     * @return True, if the requested wall added to the set of walls
      */
-    private boolean addHorizontalWall(int xOffset, int yOffset) {
-        if (xOffset + 1 > mazeWidth || yOffset > mazeHeight)
+    private void addHorizontalWall(int xOffset, int yOffset) {
+        if (xOffset + 1 > mazeWidth || yOffset > mazeHeight) {
             throw new IllegalArgumentException("Wall exceeds maze boundary");
-        return walls.add(new Wall(xOffset, yOffset, true));
+        }
+        walls.add(new Wall(xOffset, yOffset, true));
     }
 
     /**
@@ -177,17 +145,20 @@ public class DrawMaze extends JPanel {
     }
 
     /**
-     * This algorithm is based on a Point(x,y) system for determining Cell locations and layout.
+     * This algorithm is based on a Point(x,y) system for determining maze layout. It does not uses Cells.
      * It randomly chooses points from a bag of "setPoints" which already have been connected to another point.
-     * It then chooses from a loose point nearby from points stored in an array and randomly draws walls
-     * based on directional availability of that point. With the current structure, this maze generator
+     * It then chooses from a "loose point" adjacent to the current point from points stored in an array and randomly
+     * draws walls based on directional availability of that point. With the current structure, this maze generator
      * makes basic mazes whereas the solution is typically a diagonal line from the starting point in the
      * upper right to the finish in the lower right. More tweaking is needed in this algorithm to
      * create a more challenging maze layout.
      */
     void maze1() {
+        /*
+         setPoints are points from which a wall has already been drawn before
+         and where a new wall can be added to a loose point
+          */
         ArrayList<Point> setPoints = new ArrayList<>();
-        ArrayList<Point> loosePoints = new ArrayList<>();
 
         // Run a loop to fill the array with source points
         int counterY = 0;
@@ -203,6 +174,9 @@ public class DrawMaze extends JPanel {
             }
             counterY++;
         }
+
+        // loosePoints are points which have not been yet connected to another point
+        ArrayList<Point> loosePoints = new ArrayList<>();
 
         // Run a loop to fill the loose array with the remaining points
         counterY = 1;
@@ -229,13 +203,13 @@ public class DrawMaze extends JPanel {
             Point checkLeft = new Point((int) (currentPoint.getX() - 1), (int) currentPoint.getY());
             Point checkRight = new Point((int) (currentPoint.getX() + 1), (int) currentPoint.getY());
 
-            // Argument to determine whether to remove the source point
+            // Argument to determine whether to remove the current set point from the array of source points
             boolean removePoint = false;
 
             // The chosen direction to travel, defaults to 0;
             int direction = 0;
 
-            // Stores the available populateAvailableDirections/adjacent points available to the source point
+            // Stores the available directions/adjacent points available to the set point
             ArrayList<Integer> availableDirection = new ArrayList<>();
 
             /*
@@ -269,19 +243,19 @@ public class DrawMaze extends JPanel {
             // Based on the chosen direction, draw a wall
             //TODO: Create method to clean up the repeated code here
             if (direction == 1) { // DRAW UP
-                this.addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY() - 1, 1);
+                addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY() - 1);
                 loosePoints.remove(checkUp);
                 setPoints.add(checkUp);
             } else if (direction == 2) {  // DRAW DOWN
-                this.addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY(), 1);
+                addVerticalWall((int) currentPoint.getX(), (int) currentPoint.getY());
                 loosePoints.remove(checkDown);
                 setPoints.add(checkDown);
             } else if (direction == 3) {  // DRAW LEFT
-                this.addHorizontalWall((int) currentPoint.getX() - 1, (int) currentPoint.getY(), 1);
+                addHorizontalWall((int) currentPoint.getX() - 1, (int) currentPoint.getY());
                 loosePoints.remove(checkLeft);
                 setPoints.add(checkLeft);
             } else if (direction == 4) { //DRAW RIGHT
-                this.addHorizontalWall((int) currentPoint.getX(), (int) currentPoint.getY(), 1);
+                addHorizontalWall((int) currentPoint.getX(), (int) currentPoint.getY());
                 loosePoints.remove(checkRight);
                 setPoints.add(checkRight);
             }
@@ -316,12 +290,11 @@ public class DrawMaze extends JPanel {
         // Remove the wall on the opening
         walls.remove(new Wall(0, 0, true));
 
-        // Create the stack to use for recursive pathfinding
+        // Create a storage of cells to use for recursive path-finding
         Stack<Cell> stack = new Stack<>();
-        // Start at the last cell which will be the finish
         Cell currentCell = cellGrid.get(cellGrid.size() - 1);
 
-        // In each cell, populate which populateAvailableDirections are available
+        // In each cell, populate which directions are available for path-finding
         for (Cell cell : cellGrid) {
             cell.populateAvailableDirections(mazeHeight, mazeWidth);
         }
@@ -340,13 +313,13 @@ public class DrawMaze extends JPanel {
 //                direction = availableMoves.get(rand.nextInt(availableMoves.size()));
                 direction = currentCell.getAvailableDirections().get(rand.nextInt(currentCell.getAvailableDirections().size()));
 
-                //TODO: Create another method to handle Cell checking and checking next cell to remove repetition
+                //TODO: Create another method to handle checking nextCell to remove repetition
 
-                if (direction == 1) {
+                if (direction == 1) { // DIRECTION UP
                     int currentXCoor = currentCell.getxCoor();
                     int currentYCoor = currentCell.getyCoor() - 1;
                     Cell nextCell = null;
-                    for (Cell cell : cellGrid) {
+                    for (Cell cell : cellGrid) { // Search the cellGrid for a matching neighbor cell
                         if (currentXCoor == cell.getxCoor() && currentYCoor == cell.getyCoor()) {
                             nextCell = cell;
                             break;
@@ -355,7 +328,8 @@ public class DrawMaze extends JPanel {
                     assert nextCell != null;
                     /*
                     If the next cell has been visited, set the current cell as visited to end the path
-                    and remove that direction from the current cell.
+                    and remove that direction from the current cell. Also, add the previous Cell to the
+                    stack for recursive path-finding. Remove the wall between the cells and continue to next
                      */
                     if (nextCell.isVisited()) {
                         currentCell.setVisited();
@@ -366,7 +340,7 @@ public class DrawMaze extends JPanel {
                     } else {
                         currentCell.removeDirection(direction);
                     }
-                } else if (direction == 2) {
+                } else if (direction == 2) { // DIRECTION DOWN
                     int gridX = currentCell.getxCoor();
                     int gridY = currentCell.getyCoor() + 1;
                     Cell check = null;
@@ -386,7 +360,7 @@ public class DrawMaze extends JPanel {
                     } else {
                         currentCell.removeDirection(direction);
                     }
-                } else if (direction == 3) {
+                } else if (direction == 3) { // DIRECTION LEFT
                     int gridX = currentCell.getxCoor() - 1;
                     int gridY = currentCell.getyCoor();
                     Cell check = null;
@@ -406,7 +380,7 @@ public class DrawMaze extends JPanel {
                     } else {
                         currentCell.removeDirection(direction);
                     }
-                } else if (direction == 4) {
+                } else if (direction == 4) { // DIRECTION RIGHT
                     int gridX = currentCell.getxCoor() + 1;
                     int gridY = currentCell.getyCoor();
                     Cell check = null;
@@ -427,7 +401,7 @@ public class DrawMaze extends JPanel {
                         currentCell.removeDirection(direction);
                     }
                 }
-            } else {
+            } else { // When the path-finding comes to a dead end, go back one Cell
                 currentCell.setVisited();
                 currentCell = stack.pop();
             }

@@ -37,9 +37,9 @@ class Cell {
 
 
     /**
-     * Checks that the number of available moves is greater than 0
+     * Checks that the number of available moves to this Cell is greater than 0
      *
-     * @return True if available direction moves is greater than 0
+     * @return true when ArrayList availableDirections is greater than 0
      */
     boolean hasAvailableMoves() {
         return availableDirections.size() > 0;
@@ -49,9 +49,17 @@ class Cell {
      * Checks the cell for available directions to move to next cell. If the Cell is along the border, it removes the
      * edge as an available space
      *
+     * Integers are used to indicate directional availability in the availableDirections array.
+     *
+     * 1 -> UP
+     * 2 -> DOWN
+     * 3 -> LEFT
+     * 4 -> RIGHT
+     *
      * @param height The height of the grid
      * @param width  The width of the grid
      */
+    // TODO: Update directions with Enum
     void populateAvailableDirections(int height, int width) {
         // Check upward movement
         if (yCoor - 1 >= 0) {
