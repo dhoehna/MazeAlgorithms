@@ -111,10 +111,10 @@ public class DrawMaze extends JPanel {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(WALL));
-        int[] xs = {BORDER + WALL, BORDER, BORDER, BORDER + (mazeWidth - 1) * SIZE + WALL};
-        int[] ys = {BORDER, BORDER, BORDER + mazeHeight * SIZE, BORDER + mazeHeight * SIZE};
+        int[] xs = {BORDER + WALL, BORDER, BORDER, BORDER + ((mazeWidth - 1) * SIZE) + WALL};
+        int[] ys = {BORDER, BORDER, BORDER + (mazeHeight * SIZE), BORDER + (mazeHeight * SIZE)};
         g2.drawPolyline(xs, ys, 4);
-        int[] xs2 = {BORDER + SIZE - WALL, BORDER + mazeWidth * SIZE, BORDER + mazeWidth * SIZE, BORDER + mazeWidth * SIZE - WALL};
+        int[] xs2 = {BORDER + SIZE - WALL, BORDER + (mazeWidth * SIZE), BORDER + (mazeWidth * SIZE), BORDER + mazeWidth * SIZE - WALL};
         g2.drawPolyline(xs2, ys, 4);
 
         for (Wall wall : walls) {
@@ -136,15 +136,6 @@ public class DrawMaze extends JPanel {
     }
 
     /**
-     * Access to the set of walls
-     *
-     * @return the set of walls
-     */
-    public Set<Wall> getWallSet() {
-        return walls;
-    }
-
-    /**
      * This algorithm is based on a Point(x,y) system for determining maze layout. It does not uses Cells.
      * It randomly chooses points from a bag of "setPoints" which already have been connected to another point.
      * It then chooses from a "loose point" adjacent to the current point from points stored in an array and randomly
@@ -153,7 +144,7 @@ public class DrawMaze extends JPanel {
      * upper right to the finish in the lower right. More tweaking is needed in this algorithm to
      * create a more challenging maze layout.
      */
-    void maze1() {
+    private void maze1() {
         /*
          setPoints are points from which a wall has already been drawn before
          and where a new wall can be added to a loose point
