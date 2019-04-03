@@ -1,7 +1,7 @@
 module Maze where
 import Cell
 
-type Maze = [Cell]
+type Maze = [IO Cell]
 
 maxWidth :: Int
 maxWidth = 5
