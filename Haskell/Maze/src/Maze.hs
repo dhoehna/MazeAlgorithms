@@ -1,7 +1,7 @@
 module Maze where
 import Cell
 
-type Maze = [IO Cell]
+type Maze = [Cell]
 
 maxWidth :: Int
 maxWidth = 5
@@ -16,4 +16,4 @@ canCellMakeNorthNeighbor :: Int -> Bool
 canCellMakeNorthNeighbor xPositionOfCell = xPositionOfCell > 0
 
 canCellMakeEastNeighbor :: Int -> Bool
-canCellMakeEastNeighbor yPositionOfCell = yPositionOfCell < 4
+canCellMakeEastNeighbor yPositionOfCell = yPositionOfCell < (maxWidth - 1)
