@@ -1,4 +1,5 @@
 module Cell where
+import Common
   
 data Cell = Cell 
     { 
@@ -14,8 +15,12 @@ data Cell = Cell
     
 instance Show Cell where
     show (Cell north south east west row column _ _) = unwords $ map show [north, south, east, west] ++ map show [row, column]
-    
 
+getInitialDirectionFromCell :: Cell -> Maybe Direction
+getInitialDirectionFromCell cell@(Cell True _ _ _ _ _ _ _) = Just North
+getInitialDirectionFromCell cell@(Cell _ _ True _ _ _ _ _) = Just East
+getInitialDirectionFromCell _ = Nothing
+    
 makeCellWithNeighbor :: Int -> Int -> Int -> Int -> Cell
 makeCellWithNeighbor maxWidth row column randomNumber = 
     -- If on the north wall and not in the North East corner
@@ -30,7 +35,6 @@ makeCellWithNeighbor maxWidth row column randomNumber =
     --If in the north east corner
     else Cell False False False False row column False 0
     
-
     
 makeCellInRandomDirection :: Int -> Int -> Int -> Cell
 makeCellInRandomDirection row column randomNumber =
