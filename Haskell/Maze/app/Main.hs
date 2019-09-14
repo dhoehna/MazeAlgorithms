@@ -21,29 +21,31 @@ import Control.Lens    ((&), (.~), (%~), ix)
                                 -- xCoordinate <- [0..(maxWidth - 1)],
                                 -- yCoordinate <- [0..(maxHeigth - 1)]]
 
-                                
+applyDirection :: Maze -> (Cell, Direction) -> Cell
+applyDirection _ (_, North) = makeFreshCell --maze & (ix index %~ cell {hasNorthNeighbor = true}) . (ix neighborIndex %~ neighborCell {hasSouthNeighbor = true}))
+applyDirection _ (_, East) = makeFreshCell --maze & (ix index %~ cell {hasNorthNeighbor = true}) . (ix neighbotIndex %~ neighborCell {hasWestNeighbor = true}))
+ --where
+    --index = convertPointToIndex cell.row cell.column
+    --neigborCell = getNeighborCellFromCell maze cell direction
+    --neigborIndex = getNeighborIndexFromCell maze cell direction
+    
+getNeighborCellFromCell :: Maze -> Cell -> Direction -> Cell
+getNeighborCellFromCell maze cell direction@North = makeFreshCell --maze !! getIndexFromPoint (row cell - maxWidth) column cell
+getNeighborCellFromCell maze cell direction@East = makeFreshCell --maze !! getIndexFromPoint row cell (column cell + 1)
+ 
+getNeighborIndexFromCell :: Cell -> Direction -> Index
+getNeighborIndexFromCell cell direction@North = convertPointToIndex (row cell - maxWidth, column cell)
+getNeighborIndexFromCell cell direction@East = convertPointToIndex (row cell, (column cell + 1))
+    
+getCellFromIndex :: Maze -> Index -> Cell
+getCellFromIndex maze index = maze !! index
 
--- getCellFromIndex :: Maze -> Int -> Int -> Cell
--- getCellFromIndex maze width heigth = maze !! (width + (maxWidth * heigth))
-
-applyDirection :: (Cell, Direction) -> Cell
-applyDirection cellsWithDirection@(cell, direction)
- | direction == North = ix index %~ cell {hasNorthNeighbor = true}
- | direction == South = ix index %~ cell {hasNorthNeighbor = true}
- | direction == East = ix index %~ cell {hasNorthNeighbor = true}
- | direction == West = ix index %~ cell {hasNorthNeighbor = true}
- where
-    index = convertPointToIndex (cell.row, cell.column)
-
---addBirirectionalNeighbor
-
---Take initialDirections apply a function to get the breadcrumb direction.
---SOmething with Data.Sequence.mapWithIndex.
 main :: IO ()
 main = do
     let emptyCells = replicate numberOfCells makeFreshCell
     let directions = replicate numberOfCells getDirection
     let cellsWithDirection = zip emptyCells directions
+    --let mazeWithDirection = replicate numberOfCells applyDirection emptyCells cellsWithDirection
     -- maze <- fillInMaze
     -- let initialDirections = Data.Sequence.fromList (fmap getInitialDirectionFromCell maze)
     -- let emptySequence = Data.Sequence.replicate 25 Nothing

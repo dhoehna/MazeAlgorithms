@@ -67,21 +67,3 @@ getRandomDirection index = do
   -- | Return a list of valid directions at a given index
 getValidMovesFromIndex :: Index -> [Direction]
 getValidMovesFromIndex index = filter (isValidIndex . move index) [North, South, East, West]
-
--- getNeighborWithDirection :: Maze -> Cell -> Maybe Direction
--- getNeighborWithDirection maze cell@(Cell True _ _ _ _ _ _ _) = grabNeighborFromDirection maze cell North
--- getNeighborWithDirection maze cell@(Cell _ _ True _ _ _ _ _) = grabNeighborFromDirection maze cell East
--- getNeighborWithDirection maze cell@(Cell False _ False _ _ _ _ _) = Cell False False False False (maxWidth - 1) 0 False 0
-
--- grabNeighborFromDirection :: Maze -> Cell -> Direction -> Cell
---Get north neighbor and give it a south neighbor
--- grabNeighborFromDirection _ _ North = Cell False False False False 0 0 False 0
---Get East neighbor and give it a west neighbor
--- grabNeighborFromDirection _ _ East = Cell False False False False 0 0 False 0
-
---getCellFromRowAndColumn :: Maze -> int -> int -> Direction -> Cell
---getCellFromRowAndColumn _ row column North = 
---getIndexFromRowAndColumn :: int -> int -> int
---getIndexFromRowAndColumn row column = 
-    
-    
