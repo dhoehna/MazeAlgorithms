@@ -20,7 +20,7 @@ getDirection :: Index -> IO Direction
 getDirection index
     | row == 0 && column /= maxWidth - 1 = pure East
     | row /= 0 && column == maxWidth - 1 = pure North
-    | otherwise = getRandomDirection index
+    | otherwise = Random
     where
         (row, column) = convertIndexToPoint index
         
