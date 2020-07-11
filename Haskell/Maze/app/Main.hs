@@ -44,20 +44,20 @@ import System.Random
     -- neighborCell = getNeighborCellFromCell maze cell (snd cellAndDirection)
     -- neighborIndex = getNeighborIndexFromCell cell (snd cellAndDirection)
     
--- getNeighborCellFromCell :: Maze -> Cell -> Direction -> Cell
--- getNeighborCellFromCell maze cell direction@North = maze !! convertPointToIndex ((row cell - maxWidth), column cell)
--- getNeighborCellFromCell maze cell direction@East = maze !! convertPointToIndex (row cell, (column cell + 1))
- 
--- getNeighborIndexFromCell :: Cell -> Direction -> Index
--- getNeighborIndexFromCell cell direction@North = convertPointToIndex (row cell - maxWidth, column cell)
--- getNeighborIndexFromCell cell direction@East = convertPointToIndex (row cell, (column cell + 1))
+getNeighborCellFromCell :: Maze -> Cell -> Direction -> Cell
+getNeighborCellFromCell maze cell direction@North = maze !! convertPointToIndex ((row cell - maxWidth), column cell)
+getNeighborCellFromCell maze cell direction@South = maze !! convertPointToIndex (row cell + maxWidth, column cell)
+getNeighborCellFromCell maze cell direction@East = maze !! convertPointToIndex (row cell, (column cell + 1))
+getNeighborCellFromCell maze cell direction@West = maze !! convertPointToIndex (row cell, (column cell - 1))
+
+getNeighborIndexFromCell :: Cell -> Direction -> Index
+getNeighborIndexFromCell cell direction@North = convertPointToIndex (row cell - maxWidth, column cell)
+getNeighborIndexFromCell cell direction@South = convertPointToIndex (row cell + maxWidth, column cell)
+getNeighborIndexFromCell cell direction@East = convertPointToIndex (row cell, (column cell + 1))
+getNeighborIndexFromCell cell direction@West = convertPointToIndex (row cell, (column cell - 1))
     
 getCellFromIndex :: Maze -> Index -> Cell
 getCellFromIndex maze index = maze !! index
-
--- generateNeighbor :: Cell -> IO Cell
--- generateNeighbor cell
-    -- | () == North = 
     
 getRandomNeighbor :: Cell -> IO Cell
 getRandomNeighbor cell = do 
@@ -70,36 +70,36 @@ addDirection :: Cell -> IO Cell
 addDirection cell
     | row cell == 0 && column cell /= maxWidth - 1 = pure cell {hasEastNeighbor = True}
     | row cell /= 0 && column cell == maxWidth - 1 = pure cell {hasNorthNeighbor = True}
+    | row cell == 0 && column cell == maxWidth - 1 = pure cell
     | otherwise = getRandomNeighbor cell
-       
+    
+assignByWestNeighbor :: Maze -> Cell -> Cell
+assignByWestNeighbor maze cell =
+    if isValidIndex ( getNeighborIndexFromCell cell West) && doesWestNeighborHaveEastNeighbor 
+        then cell {hasEastNeighbor = True}
+    else 
+        cell
+    where doesWestNeighborHaveEastNeighbor = hasEastNeighbor $ getNeighborCellFromCell maze cell West
+        
+
+assignBySouthNeighbor :: Maze -> Cell -> Cell
+assignBySouthNeighbor maze cell =
+    if isValidIndex ( getNeighborIndexFromCell cell South) && doesSouthNeighborHaveNorthNeighbor
+        then cell {hasSouthNeighbor = True}
+    else 
+        cell
+    where doesSouthNeighborHaveNorthNeighbor = hasNorthNeighbor $ getNeighborCellFromCell maze cell South
+
+addBiDirectionalNeighbor :: Maze -> Cell -> Cell
+addBiDirectionalNeighbor maze cell = do
+    let modifiedCellByWest = assignByWestNeighbor maze cell
+    let modifiedCellBySouth = assignBySouthNeighbor maze modifiedCellByWest
+
 main :: IO ()
 main = do
-    let indexList = [0..(numberOfCells - 1)]
-    let cells = map makeCellWithIndex indexList
-    let cellsWithNeighbor = mapM addDirection cells
-    --let cellsWithRandomDirection = mapM randomNameThatICantThinkOf emptyCells
-    --let directions = replicate numberOfCells getRandomDirection
-    --let cellsWithDirection = zip emptyCells directions
-    -- let mazeWithDirections = foldl applyDirection emptyCells cellsWithDirection
+    let indexList = [0..(numberOfCells - 1)] --Make a list o fints
+    let cells = map makeCellWithIndex indexList --Make a list of default cells (Maze)    
+    cellsWithNeighbor <- mapM addDirection cells
+    let completeCells = map (addBiDirectionalNeighbor cellsWithNeighbor) cellsWithNeighbor
     
-    
-    --will need to add the bi direction
-    --let mazeWithDirection = replicate numberOfCells applyDirection emptyCells cellsWithDirection
-    -- maze <- fillInMaze
-    -- let initialDirections = Data.Sequence.fromList (fmap getInitialDirectionFromCell maze)
-    -- let emptySequence = Data.Sequence.replicate 25 Nothing
-    --yolo <- return 5
-    print "Hello"
-
-
-
-
-
-
-
-
-
-
-
-
-
+    print completeCells

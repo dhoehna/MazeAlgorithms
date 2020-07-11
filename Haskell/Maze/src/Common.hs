@@ -1,6 +1,6 @@
 module Common where
 
-data Direction = North | South | East | West | Random deriving (Eq)
+data Direction = North | South | East | West | None | Random deriving (Eq)
 
 type Index = Int
 
